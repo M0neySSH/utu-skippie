@@ -1,0 +1,12 @@
+# Root level ignores
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.idea/
+.vscode/
+
+# Ignore python scripts cache if any
+__pycache__/
+*.pyc
