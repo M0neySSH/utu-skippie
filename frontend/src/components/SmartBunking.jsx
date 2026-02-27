@@ -28,6 +28,10 @@ export default function SmartBunking({ results, formData }) {
     let remainingBunks = bunkable;
     let remainingRequired = required;
 
+    // Running tallies for projection
+    let runningAttended = total_attended;
+    let runningConducted = total_conducted;
+
     // Simple sequential planner mapping over the week timetable
     days.forEach(day => {
         let dayPlan = { day, classesToAttend: [], classesToBunk: [], noClasses: true };
@@ -39,30 +43,44 @@ export default function SmartBunking({ results, formData }) {
 
             const isMorning = time === "09:00" || time === "10:00";
             const isAfternoon = time === "14:00" || time === "15:00" || time === "16:00";
-
             let preferToSkip = (preferences.skipMorning && isMorning) || (preferences.skipAfternoon && isAfternoon);
+
+            // Predict what happens if bunked versus attended for this specific generic step
+            const pctIfAttend = ((runningAttended + 1) / (runningConducted + 1) * 100).toFixed(2);
+            const pctIfBunk = ((runningAttended) / (runningConducted + 1) * 100).toFixed(2);
 
             if (isSafe) {
                 if (remainingBunks > 0 && preferToSkip) {
-                    dayPlan.classesToBunk.push({ time, subject, reason: 'Preference' });
+                    dayPlan.classesToBunk.push({ time, subject, reason: 'Preference', pctIfBunk, pctIfAttend });
                     remainingBunks--;
+                    // Simulate having bunked it
+                    runningConducted++;
                 } else if (remainingBunks > 0) {
-                    // If we have extra bunks but no preference to skip, we attend, but we theoretically *could* bunk
-                    dayPlan.classesToAttend.push({ time, subject, note: 'Can skip if needed' });
+                    dayPlan.classesToAttend.push({ time, subject, note: 'Can skip if needed', pctIfAttend, pctIfBunk });
+                    // Assume attendance
+                    runningAttended++;
+                    runningConducted++;
                 } else {
-                    dayPlan.classesToAttend.push({ time, subject, note: 'Must attend' });
+                    dayPlan.classesToAttend.push({ time, subject, note: 'Must attend', pctIfAttend, pctIfBunk });
+                    runningAttended++;
+                    runningConducted++;
                 }
             } else {
                 // Danger zone
                 if (remainingRequired > 0) {
-                    dayPlan.classesToAttend.push({ time, subject, note: 'CRITICAL: Must attend' });
+                    dayPlan.classesToAttend.push({ time, subject, note: 'CRITICAL: Must attend', pctIfAttend, pctIfBunk });
                     remainingRequired--;
+                    runningAttended++;
+                    runningConducted++;
                 } else {
                     // Reached exactly 75% target within the week!
                     if (preferToSkip) {
-                        dayPlan.classesToBunk.push({ time, subject, reason: 'Target Reached & Preference' });
+                        dayPlan.classesToBunk.push({ time, subject, reason: 'Target Reached & Preference', pctIfBunk, pctIfAttend });
+                        runningConducted++;
                     } else {
-                        dayPlan.classesToAttend.push({ time, subject, note: 'Safe padding' });
+                        dayPlan.classesToAttend.push({ time, subject, note: 'Safe padding', pctIfAttend, pctIfBunk });
+                        runningAttended++;
+                        runningConducted++;
                     }
                 }
             }
@@ -107,7 +125,15 @@ export default function SmartBunking({ results, formData }) {
                                     <div className="ag-title">❌ Bunk Recommendations</div>
                                     <ul>
                                         {day.classesToBunk.map((c, i) => (
-                                            <li key={i}><strong>{c.time}</strong> - {c.subject} <span className="reason">({c.reason})</span></li>
+                                            <li key={i} style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                                    <span><strong>{c.time}</strong> - {c.subject}</span>
+                                                    <span className="reason">({c.reason})</span>
+                                                </div>
+                                                <div style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
+                                                    📉 Resulting Overall if Bunked: <strong style={{ color: 'var(--danger)' }}>{c.pctIfBunk}%</strong> | If Attended: {c.pctIfAttend}%
+                                                </div>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
@@ -118,7 +144,15 @@ export default function SmartBunking({ results, formData }) {
                                     <div className="ag-title">✅ Attend Schedule</div>
                                     <ul>
                                         {day.classesToAttend.map((c, i) => (
-                                            <li key={i}><strong>{c.time}</strong> - {c.subject} <span className="reason">({c.note})</span></li>
+                                            <li key={i} style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                                <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                                                    <span><strong>{c.time}</strong> - {c.subject}</span>
+                                                    <span className="reason">({c.note})</span>
+                                                </div>
+                                                <div style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
+                                                    📈 Resulting Overall if Attended: <strong style={{ color: 'var(--secondary)' }}>{c.pctIfAttend}%</strong> | If Bunked: {c.pctIfBunk}%
+                                                </div>
+                                            </li>
                                         ))}
                                     </ul>
                                 </div>
