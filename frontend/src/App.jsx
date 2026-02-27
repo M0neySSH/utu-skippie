@@ -1,20 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
 import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
+import DailyPlanner from './components/DailyPlanner';
+import { useConfig } from './hooks/useConfig';
 
 function App() {
-  const [formData, setFormData] = useState({
-    Name: '',
-    RollNo: '',
-    BranchId: '1',
-    CourseBranchDurationId: '6',
-    StudentAdmissionId: '',
-    SessionYear: new Date().getFullYear().toString(),
-    StartMonth: '1',
-    EndMonth: (new Date().getMonth() + 1).toString(),
-    ClassesPerDay: '4'
-  });
+  const { config, updateConfig } = useConfig();
+  const [formData, setFormData] = useState(config);
+
+  // Sync formData to hook config whenever it changes
+  useEffect(() => {
+    updateConfig(formData);
+  }, [formData]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -124,6 +122,12 @@ function App() {
           📊 Dashboard
         </button>
         <button
+          className={`tab-btn ${activeTab === 'Daily' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Daily')}
+        >
+          📅 Daily Simulator
+        </button>
+        <button
           className={`tab-btn ${activeTab === 'Timetable' ? 'active' : ''}`}
           onClick={() => setActiveTab('Timetable')}
         >
@@ -132,6 +136,8 @@ function App() {
       </div>
 
       {activeTab === 'Timetable' && <TimeTable />}
+
+      {activeTab === 'Daily' && <DailyPlanner results={results} />}
 
       {activeTab === 'Dashboard' && (
         <>
