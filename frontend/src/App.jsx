@@ -111,8 +111,8 @@ function App() {
   return (
     <div className="app-container">
       <div className="header">
-        <h1>UKTECH Attendance</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Bypass Restrictions & Calculate Exact Bunks</p>
+        <h1>Aura Campus</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Smart Scheduling & Predictive Analytics</p>
       </div>
 
       <div className="tabs">
