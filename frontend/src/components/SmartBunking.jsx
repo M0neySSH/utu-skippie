@@ -21,7 +21,7 @@ export default function SmartBunking({ results, formData }) {
     }
 
     // Generate specific action plan for the current/upcoming week
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const times = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", "16:00"];
 
     let actionPlan = [];

@@ -6,6 +6,7 @@ const defaultTimetable = {
     Wednesday: { "09:00": "", "10:00": "", "11:00": "", "12:00": "", "14:00": "", "15:00": "", "16:00": "" },
     Thursday: { "09:00": "", "10:00": "", "11:00": "", "12:00": "", "14:00": "", "15:00": "", "16:00": "" },
     Friday: { "09:00": "", "10:00": "", "11:00": "", "12:00": "", "14:00": "", "15:00": "", "16:00": "" },
+    Saturday: { "09:00": "", "10:00": "", "11:00": "", "12:00": "", "14:00": "", "15:00": "", "16:00": "" },
 };
 
 export function useTimetable() {
@@ -13,7 +14,11 @@ export function useTimetable() {
         const saved = localStorage.getItem('uktech_timetable');
         if (saved) {
             try {
-                return JSON.parse(saved);
+                const parsed = JSON.parse(saved);
+                if (!parsed.Saturday) {
+                    parsed.Saturday = { "09:00": "", "10:00": "", "11:00": "", "12:00": "", "14:00": "", "15:00": "", "16:00": "" };
+                }
+                return parsed;
             } catch (e) {
                 console.error("Failed to parse timetable from localStorage", e);
             }
@@ -55,5 +60,9 @@ export function useTimetable() {
         setPreferences(prev => ({ ...prev, [key]: value }));
     };
 
-    return { timetable, updateCell, preferences, updatePreference };
+    const importTimetable = (newTimetable) => {
+        setTimetable(newTimetable);
+    };
+
+    return { timetable, updateCell, preferences, updatePreference, importTimetable };
 }

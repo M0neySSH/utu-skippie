@@ -97,6 +97,25 @@ app.post('/api/attendance', async (req, res) => {
     }
 });
 
+app.get('/api/calendar', async (req, res) => {
+    try {
+        const response = await axios.post('https://uktech.ac.in/Services/Service.asmx/GetAllEventCalendar', { WebDeptId: 1 }, {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        });
+
+        let events = [];
+        if (response.data && response.data.d) {
+            events = JSON.parse(response.data.d);
+        }
+        res.json({ success: true, data: events });
+    } catch (error) {
+        console.error("Error fetching academic calendar:", error.message);
+        res.status(500).json({ error: 'Failed to fetch academic calendar from UKTECH', details: error.message });
+    }
+});
+
 // Any unmatched routes should serve index.html
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));

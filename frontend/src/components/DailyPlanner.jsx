@@ -3,31 +3,54 @@ import { useTimetable } from '../hooks/useTimetable';
 
 export default function DailyPlanner({ results }) {
     const { timetable } = useTimetable();
-    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     // Default to today if it's a weekday, otherwise Monday
-    const todayIndex = new Date().getDay() - 1;
-    const initialDay = (todayIndex >= 0 && todayIndex < 5) ? days[todayIndex] : "Monday";
+    const todayDate = new Date();
+    const todayIndex = todayDate.getDay() - 1;
+    const initialDay = (todayIndex >= 0 && todayIndex < 6) ? days[todayIndex] : "Monday";
 
     const [selectedDay, setSelectedDay] = useState(initialDay);
 
     // Store checklist state: { "09:00": true, "10:00": false, ... }
     // true = attended (default for scheduled classes), false = bunked
     const [checklist, setChecklist] = useState({});
+    const [holidayToday, setHolidayToday] = useState(null);
 
-    // Reset checklist when day changes
+    // Fetch official holidays to see if today is off
+    useEffect(() => {
+        fetch('http://localhost:3000/api/calendar')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success && Array.isArray(data.data)) {
+                    const todayStr = `${String(todayDate.getDate()).padStart(2, '0')}/${String(todayDate.getMonth() + 1).padStart(2, '0')}/${todayDate.getFullYear()}`;
+                    const foundHoliday = data.data.find(ev => ev.FromDate === todayStr);
+                    if (foundHoliday) {
+                        setHolidayToday(foundHoliday);
+                    }
+                }
+            })
+            .catch(console.error);
+    }, []);
+
+    // Reset checklist when day changes or when holiday array loads
     useEffect(() => {
         const defaultChecklist = {};
         if (timetable[selectedDay]) {
             Object.keys(timetable[selectedDay]).forEach(time => {
                 const subject = timetable[selectedDay][time];
                 if (subject && subject.trim() !== '') {
-                    defaultChecklist[time] = true; // Assume attending by default
+                    // Default to True (attending), but if it's today and today is a holiday, default to false
+                    if (selectedDay === initialDay && holidayToday) {
+                        defaultChecklist[time] = false;
+                    } else {
+                        defaultChecklist[time] = true;
+                    }
                 }
             });
         }
         setChecklist(defaultChecklist);
-    }, [selectedDay, timetable]);
+    }, [selectedDay, timetable, initialDay, holidayToday]);
 
     const handleToggle = (time) => {
         setChecklist(prev => ({
@@ -87,6 +110,13 @@ export default function DailyPlanner({ results }) {
                     {days.map(d => <option key={d} value={d}>{d}</option>)}
                 </select>
             </div>
+
+            {selectedDay === initialDay && holidayToday && (
+                <div className="status-safe mb-2 text-center" style={{ background: 'rgba(16, 185, 129, 0.15)', borderColor: 'var(--secondary)' }}>
+                    <h3 style={{ margin: 0, color: 'var(--secondary)' }}>🎉 UKTECH Holiday!</h3>
+                    <p style={{ margin: '0.5rem 0 0' }}>Today is officially <strong>{holidayToday.Title} ({holidayToday.SubjectH})</strong>. Your classes have defaulted to being unchecked (bunked) to protect you!</p>
+                </div>
+            )}
 
             <div className="stats-grid" style={{ marginBottom: '2rem' }}>
                 <div className="stat-card">

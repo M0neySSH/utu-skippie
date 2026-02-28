@@ -3,6 +3,7 @@ import './index.css';
 import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
 import DailyPlanner from './components/DailyPlanner';
+import AcademicCalendar from './components/AcademicCalendar';
 import { useConfig } from './hooks/useConfig';
 
 function App() {
@@ -133,11 +134,19 @@ function App() {
         >
           🗓️ Timetable Editor
         </button>
+        <button
+          className={`tab-btn ${activeTab === 'Calendar' ? 'active' : ''}`}
+          onClick={() => setActiveTab('Calendar')}
+        >
+          📚 Academic Calendar
+        </button>
       </div>
 
       {activeTab === 'Timetable' && <TimeTable />}
 
       {activeTab === 'Daily' && <DailyPlanner results={results} />}
+
+      {activeTab === 'Calendar' && <AcademicCalendar />}
 
       {activeTab === 'Dashboard' && (
         <>
