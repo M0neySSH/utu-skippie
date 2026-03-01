@@ -1,12 +1,24 @@
-# Root level ignores
-node_modules/
-.DS_Store
-Thumbs.db
+# Logs
+logs
 *.log
-.env
-.idea/
-.vscode/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Ignore python scripts cache if any
-__pycache__/
-*.pyc
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
