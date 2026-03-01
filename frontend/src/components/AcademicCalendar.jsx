@@ -1,46 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useCalendar } from '../hooks/useCalendar';
 
 export default function AcademicCalendar() {
+    const { events: calendarEvents, loading, error } = useCalendar();
     const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/calendar')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && Array.isArray(data.data)) {
-                    const currentYear = new Date().getFullYear();
+        if (calendarEvents && calendarEvents.length > 0) {
+            const currentYear = new Date().getFullYear();
 
-                    // Sort events chronologically and filter out previous years
-                    const parsed = data.data.map(ev => {
-                        const [day, month, year] = ev.FromDate.split('/');
-                        return {
-                            ...ev,
-                            dateObj: new Date(`${year}-${month}-${day}`)
-                        };
-                    }).filter(ev => ev.dateObj.getFullYear() >= currentYear);
+            // Sort events chronologically and filter out previous years
+            const parsed = calendarEvents.map(ev => {
+                const [day, month, year] = ev.FromDate.split('/');
+                return {
+                    ...ev,
+                    dateObj: new Date(`${year}-${month}-${day}`)
+                };
+            }).filter(ev => ev.dateObj.getFullYear() >= currentYear);
 
-                    parsed.sort((a, b) => a.dateObj - b.dateObj);
-                    setEvents(parsed);
-                } else {
-                    setError('Invalid data format received from server.');
-                }
-                setLoading(false);
-            })
-            .catch(err => {
-                console.error(err);
-                setError('Failed to fetch the academic calendar.');
-                setLoading(false);
-            });
-    }, []);
+            parsed.sort((a, b) => a.dateObj - b.dateObj);
+            setEvents(parsed);
+        }
+    }, [calendarEvents]);
 
     if (loading) {
         return (
             <div className="glass-card mt-2 text-center">
                 <h2>📅 Academic Calendar</h2>
                 <div className="loading-spinner" style={{ margin: '2rem auto' }}></div>
-                <p>Fetching latest schedule from Aura Campus...</p>
+                <p>Fetching latest schedule from YouTu...</p>
             </div>
         );
     }
@@ -77,7 +65,7 @@ export default function AcademicCalendar() {
 
     return (
         <div className="glass-card mt-2 mb-2">
-            <h2>📅 Official Aura Campus Calendar</h2>
+            <h2>📅 Official YouTu Calendar</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
                 All officially declared holidays and events, synchronized LIVE from the university server.
             </p>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useTimetable } from '../hooks/useTimetable';
+import { useCalendar } from '../hooks/useCalendar';
 
 export default function DailyPlanner({ results }) {
     const { timetable } = useTimetable();
+    const { events: holidays } = useCalendar();
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     // Default to today if it's a weekday, otherwise Monday
@@ -17,21 +19,16 @@ export default function DailyPlanner({ results }) {
     const [checklist, setChecklist] = useState({});
     const [holidayToday, setHolidayToday] = useState(null);
 
-    // Fetch official holidays to see if today is off
+    // Determine if today is an official holiday based on fetched calendar
     useEffect(() => {
-        fetch('http://localhost:3000/api/calendar')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && Array.isArray(data.data)) {
-                    const todayStr = `${String(todayDate.getDate()).padStart(2, '0')}/${String(todayDate.getMonth() + 1).padStart(2, '0')}/${todayDate.getFullYear()}`;
-                    const foundHoliday = data.data.find(ev => ev.FromDate === todayStr);
-                    if (foundHoliday) {
-                        setHolidayToday(foundHoliday);
-                    }
-                }
-            })
-            .catch(console.error);
-    }, []);
+        if (holidays && holidays.length > 0) {
+            const todayStr = `${String(todayDate.getDate()).padStart(2, '0')}/${String(todayDate.getMonth() + 1).padStart(2, '0')}/${todayDate.getFullYear()}`;
+            const foundHoliday = holidays.find(ev => ev.FromDate === todayStr);
+            if (foundHoliday) {
+                setHolidayToday(foundHoliday);
+            }
+        }
+    }, [holidays]);
 
     // Reset checklist when day changes or when holiday array loads
     useEffect(() => {
@@ -113,7 +110,7 @@ export default function DailyPlanner({ results }) {
 
             {selectedDay === initialDay && holidayToday && (
                 <div className="status-safe mb-2 text-center" style={{ background: 'rgba(16, 185, 129, 0.15)', borderColor: 'var(--secondary)' }}>
-                    <h3 style={{ margin: 0, color: 'var(--secondary)' }}>🎉 Aura Campus Holiday!</h3>
+                    <h3 style={{ margin: 0, color: 'var(--secondary)' }}>🎉 YouTu Holiday!</h3>
                     <p style={{ margin: '0.5rem 0 0' }}>Today is officially <strong>{holidayToday.Title} ({holidayToday.SubjectH})</strong>. Your classes have defaulted to being unchecked (bunked) to protect you!</p>
                 </div>
             )}

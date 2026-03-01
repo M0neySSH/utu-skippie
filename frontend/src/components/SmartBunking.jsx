@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTimetable } from '../hooks/useTimetable';
+import { useCalendar } from '../hooks/useCalendar';
 
 export default function SmartBunking({ results, formData }) {
     const { timetable, preferences } = useTimetable();
     const { total_conducted, total_attended, percentage } = results;
 
-    const [holidays, setHolidays] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:3000/api/calendar')
-            .then(res => res.json())
-            .then(data => {
-                if (data.success && Array.isArray(data.data)) {
-                    setHolidays(data.data);
-                }
-            })
-            .catch(console.error);
-    }, []);
+    const { events: holidays } = useCalendar();
 
     if (!results) return null;
 

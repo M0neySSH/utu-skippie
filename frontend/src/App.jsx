@@ -111,8 +111,8 @@ function App() {
   return (
     <div className="app-container">
       <div className="header">
-        <h1>Aura Campus</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Smart Scheduling & Predictive Analytics</p>
+        <h1>YouTu</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Your Own Utility for Technical University</p>
       </div>
 
       <div className="tabs">
@@ -156,15 +156,15 @@ function App() {
               <div className="form-grid">
                 <div className="form-group">
                   <label>Name</label>
-                  <input type="text" name="Name" value={formData.Name} onChange={handleChange} required placeholder="E.g. Manish" />
+                  <input type="text" name="Name" value={formData.Name} onChange={handleChange} required placeholder="E.g. Rahul" />
                 </div>
                 <div className="form-group">
                   <label>Roll No</label>
-                  <input type="text" name="RollNo" value={formData.RollNo} onChange={handleChange} required placeholder="2316..." />
+                  <input type="text" name="RollNo" value={formData.RollNo} onChange={handleChange} required placeholder="E.g. 123456789012" />
                 </div>
                 <div className="form-group">
                   <label>Student Admission ID</label>
-                  <input type="text" name="StudentAdmissionId" value={formData.StudentAdmissionId} onChange={handleChange} required placeholder="E.g. 29820" />
+                  <input type="text" name="StudentId" value={formData.StudentId} onChange={handleChange} required placeholder="E.g. 123456789012" />
                 </div>
                 <div className="form-group">
                   <label>Branch ID</label>
@@ -242,6 +242,10 @@ function App() {
           )}
         </>
       )}
+      <div style={{ textAlign: 'center', marginTop: '3rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+        <p>Built for UTU Students</p>
+        <p>Developed with ❤️ by Manish</p>
+      </div>
     </div>
   );
 }
