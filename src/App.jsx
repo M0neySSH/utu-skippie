@@ -20,6 +20,14 @@ function App() {
   const [error, setError] = useState(null);
   const [results, setResults] = useState(null);
   const [activeTab, setActiveTab] = useState('Dashboard');
+  const [showGuide, setShowGuide] = useState(false);
+
+  const bookmarkletCode = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('YouTu Config\\nCourseBranchDurationId: '+v1+'\\nStudentAdmissionId: '+v2+'\\nBranchId: '+v3);}})();`;
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(`"${bookmarkletCode}"`);
+    alert("Copied to clipboard! (Remember to remove the quotes before pasting into your browser url bar)");
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -111,7 +119,6 @@ function App() {
 
   return (
     <div className="app-container">
-      <InstallPWA />
 
       <div className="header">
         <h1>YouTu</h1>
@@ -151,105 +158,143 @@ function App() {
 
       {activeTab === 'Calendar' && <AcademicCalendar />}
 
-      {activeTab === 'Dashboard' && (
-        <>
-          <div className="glass-card">
-            <h2>Student Details</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Name</label>
-                  <input type="text" name="Name" value={formData.Name} onChange={handleChange} required placeholder="E.g. Rahul" />
-                </div>
-                <div className="form-group">
-                  <label>Roll No</label>
-                  <input type="text" name="RollNo" value={formData.RollNo} onChange={handleChange} required placeholder="E.g. 123456789012" />
-                </div>
-                <div className="form-group">
-                  <label>Student Admission ID</label>
-                  <input type="text" name="StudentAdmissionId" value={formData.StudentAdmissionId} onChange={handleChange} required placeholder="E.g. 123456789012" />
-                </div>
-                <div className="form-group">
-                  <label>Branch ID</label>
-                  <input type="number" name="BranchId" value={formData.BranchId} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Duration ID</label>
-                  <input type="number" name="CourseBranchDurationId" value={formData.CourseBranchDurationId} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Session Year</label>
-                  <input type="number" name="SessionYear" value={formData.SessionYear} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Start Month (1-12)</label>
-                  <input type="number" min="1" max="12" name="StartMonth" value={formData.StartMonth} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>End Month (1-12)</label>
-                  <input type="number" min="1" max="12" name="EndMonth" value={formData.EndMonth} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                  <label>Classes per Day</label>
-                  <input type="number" step="0.5" name="ClassesPerDay" value={formData.ClassesPerDay} onChange={handleChange} placeholder="For accurate predictions" />
-                </div>
+      <>
+        <div className="glass-card">
+          <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <span>Student Details</span>
+            <button
+              type="button"
+              onClick={() => setShowGuide(!showGuide)}
+              style={{ width: 'auto', margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--border)' }}
+            >
+              ❓ How to find my IDs?
+            </button>
+          </h2>
+
+          {showGuide && (
+            <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
+              <h4 style={{ color: '#38bdf8', marginBottom: '0.5rem' }}>Auto-Extractor Guide</h4>
+              <ol style={{ marginLeft: '1.5rem', marginBottom: '1rem', color: 'var(--text-main)', lineHeight: '1.5' }}>
+                <li>Go to your official UKTECH student dashboard.</li>
+                <li>Navigate to the <strong>Student Attendance System</strong> page.</li>
+                <li>Select your Semester/Year/Session dropdowns on that page.</li>
+                <li>Copy the special code below.</li>
+                <li>Paste it into your browser's URL address bar on the UKTECH page and hit Enter. <em>(Note: You MUST remove the quotation marks at the start and end of the pasted text!)</em></li>
+                <li>A popup will flash with your exact IDs!</li>
+              </ol>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                <textarea
+                  readOnly
+                  value={`"${bookmarkletCode}"`}
+                  style={{ flex: 1, height: '60px', fontSize: '0.75rem', fontFamily: 'monospace', background: 'rgba(0,0,0,0.5)', color: '#34D399', border: '1px solid var(--border)', borderRadius: '0.3rem', padding: '0.5rem', resize: 'none' }}
+                />
+                <button type="button" onClick={copyToClipboard} style={{ width: 'auto', margin: 0, padding: '0.5rem', background: 'var(--secondary)' }}>
+                  📋 Copy
+                </button>
               </div>
-              <button type="submit" disabled={loading}>
-                {loading ? <div className="loader"></div> : 'Fetch & Analyze'}
-              </button>
-            </form>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Name</label>
+                <input type="text" name="Name" value={formData.Name} onChange={handleChange} required placeholder="E.g. Rahul" />
+              </div>
+              <div className="form-group">
+                <label>Roll No</label>
+                <input type="text" name="RollNo" value={formData.RollNo} onChange={handleChange} required placeholder="E.g. 123456789012" />
+              </div>
+              <div className="form-group">
+                <label>Student Admission ID</label>
+                <input type="text" name="StudentAdmissionId" value={formData.StudentAdmissionId} onChange={handleChange} required placeholder="E.g. 123456789012" />
+              </div>
+              <div className="form-group">
+                <label>Branch ID</label>
+                <input type="number" name="BranchId" value={formData.BranchId} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Duration ID</label>
+                <input type="number" name="CourseBranchDurationId" value={formData.CourseBranchDurationId} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Session Year</label>
+                <input type="number" name="SessionYear" value={formData.SessionYear} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Start Month (1-12)</label>
+                <input type="number" min="1" max="12" name="StartMonth" value={formData.StartMonth} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>End Month (1-12)</label>
+                <input type="number" min="1" max="12" name="EndMonth" value={formData.EndMonth} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label>Classes per Day</label>
+                <input type="number" step="0.5" name="ClassesPerDay" value={formData.ClassesPerDay} onChange={handleChange} placeholder="For accurate predictions" />
+              </div>
+            </div>
+            <button type="submit" disabled={loading}>
+              {loading ? <div className="loader"></div> : 'Fetch & Analyze'}
+            </button>
+          </form>
+        </div>
+
+        {error && (
+          <div className="glass-card" style={{ borderColor: 'var(--danger)', background: 'rgba(239, 68, 68, 0.1)' }}>
+            <h3 style={{ color: 'var(--danger)' }}>Error</h3>
+            <p>{error}</p>
           </div>
+        )}
 
-          {error && (
-            <div className="glass-card" style={{ borderColor: 'var(--danger)', background: 'rgba(239, 68, 68, 0.1)' }}>
-              <h3 style={{ color: 'var(--danger)' }}>Error</h3>
-              <p>{error}</p>
+        {results && !loading && (
+          <div className="glass-card app-container" style={{ gap: '1.5rem', animation: 'fadeIn 0.5s ease-out' }}>
+            <h2 style={{ textAlign: 'center' }}>Attendance Report for {formData.Name.toUpperCase()}</h2>
+
+            <div
+              className="percentage-circle"
+              style={{
+                '--percentage': `${results.percentage}%`,
+                '--state-color': results.percentage >= 75 ? 'var(--secondary)' : 'var(--danger)'
+              }}
+            >
+              <span>{results.percentage.toFixed(1)}%</span>
             </div>
-          )}
 
-          {results && !loading && (
-            <div className="glass-card app-container" style={{ gap: '1.5rem', animation: 'fadeIn 0.5s ease-out' }}>
-              <h2 style={{ textAlign: 'center' }}>Attendance Report for {formData.Name.toUpperCase()}</h2>
-
-              <div
-                className="percentage-circle"
-                style={{
-                  '--percentage': `${results.percentage}%`,
-                  '--state-color': results.percentage >= 75 ? 'var(--secondary)' : 'var(--danger)'
-                }}
-              >
-                <span>{results.percentage.toFixed(1)}%</span>
+            <div className="stats-grid">
+              <div className="stat-card">
+                <div className="stat-value">{results.total_conducted}</div>
+                <div className="stat-label">Total Conducted</div>
               </div>
-
-              <div className="stats-grid">
-                <div className="stat-card">
-                  <div className="stat-value">{results.total_conducted}</div>
-                  <div className="stat-label">Total Conducted</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: 'var(--secondary)' }}>{results.total_attended}</div>
-                  <div className="stat-label">Total Attended</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: 'var(--danger)' }}>{results.total_conducted - results.total_attended - results.leaves}</div>
-                  <div className="stat-label">Total Missed</div>
-                </div>
-                <div className="stat-card">
-                  <div className="stat-value" style={{ color: 'var(--warning)' }}>{results.leaves}</div>
-                  <div className="stat-label">Official Leaves</div>
-                </div>
+              <div className="stat-card">
+                <div className="stat-value" style={{ color: 'var(--secondary)' }}>{results.total_attended}</div>
+                <div className="stat-label">Total Attended</div>
               </div>
-
-              <SmartBunking results={results} formData={formData} />
+              <div className="stat-card">
+                <div className="stat-value" style={{ color: 'var(--danger)' }}>{results.total_conducted - results.total_attended - results.leaves}</div>
+                <div className="stat-label">Total Missed</div>
+              </div>
+              <div className="stat-card">
+                <div className="stat-value" style={{ color: 'var(--warning)' }}>{results.leaves}</div>
+                <div className="stat-label">Official Leaves</div>
+              </div>
             </div>
-          )}
-        </>
-      )}
-      <div style={{ textAlign: 'center', marginTop: '3rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+
+            <SmartBunking results={results} formData={formData} />
+          </div>
+          </div>
+        )}
+    </>
+  )
+}
+
+      <InstallPWA />
+
+      <div style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
         <p>Built for UTU Students</p>
         <p>Developed with ❤️ by Manish</p>
       </div>
-    </div>
+    </div >
   );
 }
 
