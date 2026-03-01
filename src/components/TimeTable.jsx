@@ -74,7 +74,7 @@ export default function TimeTable() {
                             <tr key={day}>
                                 <td className="day-label">{day}</td>
                                 {times.map(time => (
-                                    <td key={`${day}-${time}`}>
+                                    <td key={`${day}-${time}`} data-label={`${time}${time === '12:00' ? ' (Break)' : ''}`}>
                                         <input
                                             type="text"
                                             className="tt-input"
