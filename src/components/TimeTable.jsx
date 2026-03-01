@@ -25,15 +25,26 @@ export default function TimeTable() {
         const reader = new FileReader();
         reader.onload = (e) => {
             try {
-                const importedData = JSON.parse(e.target.result);
+                // WhatsApp and some file managers add invisible characters or BOM to files
+                // We strip everything before the first { and after the last }
+                let rawText = e.target.result || "";
+                const firstBrace = rawText.indexOf('{');
+                const lastBrace = rawText.lastIndexOf('}');
+
+                if (firstBrace !== -1 && lastBrace !== -1) {
+                    rawText = rawText.substring(firstBrace, lastBrace + 1);
+                }
+
+                const importedData = JSON.parse(rawText);
                 if (importedData && typeof importedData === 'object' && importedData["Monday"]) {
                     importTimetable(importedData);
                     alert("Timetable imported successfully!");
                 } else {
-                    alert("Invalid timetable format.");
+                    alert("Invalid timetable structure. Missing days.");
                 }
             } catch (error) {
-                alert("Error reading file.");
+                console.error(error);
+                alert("Error reading file! Make sure it is a valid text or JSON file.");
             }
         };
         reader.readAsText(file);
@@ -48,7 +59,7 @@ export default function TimeTable() {
                     <button onClick={() => fileInputRef.current.click()} className="tab-btn" style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}>📥 Import JSON</button>
                     <input
                         type="file"
-                        accept=".json"
+                        accept=".json,text/plain,*/*"
                         ref={fileInputRef}
                         style={{ display: 'none' }}
                         onChange={handleImport}
