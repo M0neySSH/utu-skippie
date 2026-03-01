@@ -4,6 +4,7 @@ import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
 import DailyPlanner from './components/DailyPlanner';
 import AcademicCalendar from './components/AcademicCalendar';
+import InstallPWA from './components/InstallPWA';
 import { useConfig } from './hooks/useConfig';
 
 function App() {
@@ -110,6 +111,8 @@ function App() {
 
   return (
     <div className="app-container">
+      <InstallPWA />
+
       <div className="header">
         <h1>YouTu</h1>
         <p style={{ color: 'var(--text-muted)' }}>Your Own Utility for Technical University</p>
