@@ -116,11 +116,15 @@ app.get('/api/calendar', async (req, res) => {
     }
 });
 
-// Any unmatched routes should serve index.html
+// Any unmatched routes should serve index.html (Local Dev Fallback)
 app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`UKTECH proxy server and App running on http://127.0.0.1:${PORT} and http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`UKTECH proxy server and App running on http://127.0.0.1:${PORT} and http://localhost:${PORT}`);
+    });
+}
+
+module.exports = app;

@@ -24,7 +24,7 @@ export function useCalendar() {
                 }
 
                 // Fetch fresh data
-                const res = await fetch('http://localhost:3000/api/calendar');
+                const res = await fetch('/api/calendar');
                 const data = await res.json();
 
                 if (data.success && Array.isArray(data.data)) {

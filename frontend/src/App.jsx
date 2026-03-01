@@ -68,7 +68,7 @@ function App() {
       const requests = [];
       for (let m = start; m <= end; m++) {
         requests.push(
-          fetch('http://localhost:3000/api/attendance', {
+          fetch('/api/attendance', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
