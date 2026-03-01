@@ -167,7 +167,7 @@ function App() {
                 </div>
                 <div className="form-group">
                   <label>Student Admission ID</label>
-                  <input type="text" name="StudentId" value={formData.StudentId} onChange={handleChange} required placeholder="E.g. 123456789012" />
+                  <input type="text" name="StudentAdmissionId" value={formData.StudentAdmissionId} onChange={handleChange} required placeholder="E.g. 123456789012" />
                 </div>
                 <div className="form-group">
                   <label>Branch ID</label>
