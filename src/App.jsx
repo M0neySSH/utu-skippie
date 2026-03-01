@@ -282,11 +282,8 @@ function App() {
 
             <SmartBunking results={results} formData={formData} />
           </div>
-          </div>
         )}
-    </>
-  )
-}
+      </>
 
       <InstallPWA />
 
@@ -294,7 +291,7 @@ function App() {
         <p>Built for UTU Students</p>
         <p>Developed with ❤️ by Manish</p>
       </div>
-    </div >
+    </div>
   );
 }
 
