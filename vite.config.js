@@ -12,7 +12,7 @@ export default defineConfig({
       manifest: {
         name: 'Skippie',
         short_name: 'Skippie',
-        description: 'Your Own Utility for Technical University',
+        description: 'Predictive Intelligence for UTU Attendance Planning',
         theme_color: '#0f172a',
         background_color: '#0f172a',
         display: 'standalone',

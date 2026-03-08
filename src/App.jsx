@@ -173,7 +173,7 @@ function App() {
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Calculate Your Bunks, Own Your Time ⚡</p>
+        <p style={{ color: 'var(--text-muted)' }}>Predictive Intelligence for UTU Attendance Planning</p>
       </div>
 
       <div className="tabs">
@@ -362,7 +362,7 @@ function App() {
             textUnderlineOffset: '4px', marginTop: '0.5rem'
           }}
         >
-          Discover Skippie's Mission & Features
+          About Skippie
         </button>
       </div>
     </div>
