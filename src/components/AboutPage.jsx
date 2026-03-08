@@ -19,10 +19,10 @@ export default function AboutPage() {
                     <span>🎯</span> The Motive
                 </h3>
                 <p style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>
-                    Let's be honest: tracking university attendance is stressful. Between calculating 75% thresholds, guessing how many days you can safely take off, and dealing with clunky official portals, managing your academic life shouldn't feel like a second job.
+                    Tracking university attendance shouldn't feel like a second job. Between calculating 75% thresholds, predicting safe days off, and navigating official portals, staying on top of your schedule can be a tedious manual process.
                 </p>
                 <p style={{ color: 'var(--text-main)' }}>
-                    Skippie was engineered to solve this exact problem. By bypassing the sluggish official UKTECH portal and directly parsing the raw academic database, Skippie hands you the computational power to predict, simulate, and plan your entire semester in milliseconds. Our mission is to eliminate attendance anxiety so you can focus on passing your exams, building your career, and actually enjoying university.
+                    Skippie was engineered to automate this exact workflow. By bypassing the traditional UKTECH portal and directly parsing the core academic database, Skippie hands you the computational power to predict, simulate, and optimize your entire semester in milliseconds. Our mission is to automate the mundane calculations so you can focus your energy entirely on passing exams, building your career, and excelling at university.
                 </p>
             </div>
 
@@ -63,7 +63,9 @@ export default function AboutPage() {
             </div>
 
             <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '0.5rem' }}>Developed with ❤️ by Manish</p>
+                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+                    Developed with ❤️ by <a href="https://github.com/manish" target="_blank" rel="noopener noreferrer" style={{ color: '#818CF8', textDecoration: 'none' }}>Manish</a>
+                </p>
                 <p style={{ fontSize: '0.9rem' }}>Empowering the Veer Madho Singh Bhandari Uttarakhand Technical University community.</p>
             </div>
         </div>
