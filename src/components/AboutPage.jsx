@@ -2,34 +2,69 @@ import React from 'react';
 
 export default function AboutPage() {
     return (
-        <div className="glass-card app-container" style={{ animation: 'fadeIn 0.5s ease-out', marginTop: '1rem' }}>
-            <h2 style={{ textAlign: 'center', marginBottom: '1.5rem', background: 'linear-gradient(to right, #818CF8, #34D399)', WebkitBackgroundClip: 'text', color: 'transparent' }}>
-                About Skippie
-            </h2>
+        <div className="glass-card app-container" style={{ animation: 'fadeIn 0.5s ease-out', marginTop: '1rem', padding: '2rem' }}>
 
-            <div className="mb-2" style={{ lineHeight: '1.6' }}>
-                <h3 style={{ color: 'var(--secondary)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>🎯 Our Motive</h3>
-                <p style={{ color: 'var(--text-muted)' }}>
-                    Skippie was built with one core mission: to give UKTECH students total control over their academic lives.
-                    We believe that maintaining a 75% attendance requirement shouldn't require complex math or guesswork.
-                    Skippie empowers you to easily track your history, safely plan your breaks, and focus on what matters most—your education and well-being.
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎓</div>
+                <h2 style={{ fontSize: '2rem', background: 'linear-gradient(to right, #818CF8, #34D399)', WebkitBackgroundClip: 'text', color: 'transparent', marginBottom: '0.5rem' }}>
+                    Welcome to Skippie
+                </h2>
+                <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
+                    The Open-Source Attendance Manager for UKTECH Students.
                 </p>
             </div>
 
-            <div className="mb-2" style={{ lineHeight: '1.6' }}>
-                <h3 style={{ color: 'var(--secondary)', fontSize: '1.2rem', marginBottom: '0.5rem' }}>✨ Key Features</h3>
-                <ul style={{ color: 'var(--text-muted)', marginLeft: '1.5rem' }}>
-                    <li style={{ marginBottom: '0.5rem' }}><strong>Smart Action Plan:</strong> Uses your personal timetable to tell you exactly which classes are safe to bunk.</li>
-                    <li style={{ marginBottom: '0.5rem' }}><strong>Subject History:</strong> Instantly view an explicit calendar of your Present, Absent, and Leave dates.</li>
-                    <li style={{ marginBottom: '0.5rem' }}><strong>Daily Simulator:</strong> Check off the classes you actually attended today to see your live projected percentage.</li>
-                    <li style={{ marginBottom: '0.5rem' }}><strong>Live University Calendar:</strong> Automatically syncs official holidays to warn you before you accidentally try to attend on a day off!</li>
-                    <li style={{ marginBottom: '0.5rem' }}><strong>100% Private:</strong> Skippie runs entirely in your browser. We never store your passwords or your data on external servers.</li>
-                </ul>
+            <div className="mb-2" style={{ lineHeight: '1.6', background: 'rgba(255,255,255,0.03)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--border)' }}>
+                <h3 style={{ color: 'var(--secondary)', fontSize: '1.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>🎯</span> The Motive
+                </h3>
+                <p style={{ color: 'var(--text-main)', marginBottom: '1rem' }}>
+                    Let's be honest: tracking university attendance is stressful. Between calculating 75% thresholds, guessing how many days you can safely take off, and dealing with clunky official portals, managing your academic life shouldn't feel like a second job.
+                </p>
+                <p style={{ color: 'var(--text-main)' }}>
+                    Skippie was engineered to solve this exact problem. By bypassing the sluggish official UKTECH portal and directly parsing the raw academic database, Skippie hands you the computational power to predict, simulate, and plan your entire semester in milliseconds. Our mission is to eliminate attendance anxiety so you can focus on passing your exams, building your career, and actually enjoying university.
+                </p>
             </div>
 
-            <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <p>Developed with ❤️ by Manish</p>
-                <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Built for UTU Students</p>
+            <div className="mb-2" style={{ lineHeight: '1.6', marginTop: '2rem' }}>
+                <h3 style={{ color: 'var(--secondary)', fontSize: '1.4rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span>⚡</span> Elite Engine Features
+                </h3>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <h4 style={{ color: '#818CF8', marginBottom: '0.5rem' }}>🧠 Smart Bunk Engine</h4>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            Tell Skippie your weekly timetable. The algorithm will mathematically compute an explicit action plan of exactly which classes you can skip today, tomorrow, and next week while safely remaining above the dangerous 75% red-line.
+                        </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <h4 style={{ color: '#34D399', marginBottom: '0.5rem' }}>📅 Daily Simulator</h4>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            Wake up, open the app, and uncheck the classes you plan to sleep through. The simulator will instantly project your hypothetical final attendance percentage by 5:00 PM, taking the guesswork out of bunking.
+                        </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <h4 style={{ color: '#F59E0B', marginBottom: '0.5rem' }}>📋 Deep History</h4>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            No more blind data. The Subject History tab reconstructs your entire semester by plotting every single Present, Absent, and Official Leave marker directly onto an interactive calendar grid.
+                        </p>
+                    </div>
+
+                    <div style={{ background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+                        <h4 style={{ color: '#EF4444', marginBottom: '0.5rem' }}>🔒 100% Client-Side</h4>
+                        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                            Your secret UKTECH tokens and passwords never touch our databases. Skippie operates entirely as a local Progressive Web App (PWA) right on your phone's processor.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '0.5rem' }}>Developed with ❤️ by Manish</p>
+                <p style={{ fontSize: '0.9rem' }}>Empowering the Veer Madho Singh Bhandari Uttarakhand Technical University community.</p>
             </div>
         </div>
     );

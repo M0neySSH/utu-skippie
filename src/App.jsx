@@ -173,7 +173,7 @@ function App() {
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Master Your Attendance, Plan Your Bunks!</p>
+        <p style={{ color: 'var(--text-muted)' }}>Calculate Your Bunks, Own Your Time ⚡</p>
       </div>
 
       <div className="tabs">
@@ -208,12 +208,6 @@ function App() {
           onClick={() => setActiveTab('Calendar')}
         >
           📚 Academic Calendar
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'About' ? 'active' : ''}`}
-          onClick={() => setActiveTab('About')}
-        >
-          💡 About
         </button>
       </div>
 
@@ -356,9 +350,20 @@ function App() {
 
       <InstallPWA />
 
-      <div style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+      <div style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
         <p>Built for UTU Students</p>
         <p>Developed with ❤️ by Manish</p>
+        <button
+          type="button"
+          onClick={() => { setActiveTab('About'); window.scrollTo(0, 0); }}
+          style={{
+            background: 'none', border: 'none', color: '#38bdf8',
+            textDecoration: 'underline', cursor: 'pointer', fontSize: '0.9rem', padding: 0,
+            textUnderlineOffset: '4px', marginTop: '0.5rem'
+          }}
+        >
+          Discover Skippie's Mission & Features
+        </button>
       </div>
     </div>
   );
