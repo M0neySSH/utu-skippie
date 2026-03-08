@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'YouTu',
-        short_name: 'YouTu',
+        name: 'Skippie',
+        short_name: 'Skippie',
         description: 'Your Own Utility for Technical University',
         theme_color: '#0f172a',
         background_color: '#0f172a',

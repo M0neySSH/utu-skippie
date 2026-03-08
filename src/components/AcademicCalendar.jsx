@@ -28,7 +28,7 @@ export default function AcademicCalendar() {
             <div className="glass-card mt-2 text-center">
                 <h2>📅 Academic Calendar</h2>
                 <div className="loading-spinner" style={{ margin: '2rem auto' }}></div>
-                <p>Fetching latest schedule from YouTu...</p>
+                <p>Fetching latest schedule from Skippie...</p>
             </div>
         );
     }
@@ -65,7 +65,7 @@ export default function AcademicCalendar() {
 
     return (
         <div className="glass-card mt-2 mb-2">
-            <h2>📅 Official YouTu Calendar</h2>
+            <h2>📅 Official Skippie Calendar</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
                 All officially declared holidays and events, synchronized LIVE from the university server.
             </p>

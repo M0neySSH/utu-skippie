@@ -38,7 +38,7 @@ const InstallPWA = () => {
             color: 'white'
         }}>
             <div>
-                <h4 style={{ margin: 0, fontSize: '1rem' }}>Install YouTu App</h4>
+                <h4 style={{ margin: 0, fontSize: '1rem' }}>Install Skippie App</h4>
                 <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.9 }}>Add it to your home screen</p>
             </div>
             <button

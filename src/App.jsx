@@ -4,6 +4,7 @@ import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
 import DailyPlanner from './components/DailyPlanner';
 import AcademicCalendar from './components/AcademicCalendar';
+import SubjectHistory from './components/SubjectHistory';
 import InstallPWA from './components/InstallPWA';
 import { useConfig } from './hooks/useConfig';
 
@@ -22,7 +23,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [showGuide, setShowGuide] = useState(false);
 
-  const bookmarkletCode = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('YouTu Config\\nCourseBranchDurationId: '+v1+'\\nStudentAdmissionId: '+v2+'\\nBranchId: '+v3);}})();`;
+  const bookmarkletCode = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('Skippie Config\\nCourseBranchDurationId: '+v1+'\\nStudentAdmissionId: '+v2+'\\nBranchId: '+v3);}})();`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(`"${bookmarkletCode}"`);
@@ -86,7 +87,11 @@ function App() {
             })
           }).then(res => {
             if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-            return res.json();
+            return res.json().then(data => ({
+              ...data,
+              monthId: m,
+              yearId: parseInt(formData.SessionYear)
+            }));
           })
         );
       }
@@ -105,7 +110,8 @@ function App() {
         total_attended,
         total_conducted,
         leaves,
-        percentage
+        percentage,
+        monthsData: resultsArray
       });
 
     } catch (err) {
@@ -121,8 +127,8 @@ function App() {
     <div className="app-container">
 
       <div className="header">
-        <h1>YouTu</h1>
-        <p style={{ color: 'var(--text-muted)' }}>Your Own Utility for Technical University</p>
+        <h1>Skippie</h1>
+        <p style={{ color: 'var(--text-muted)' }}>The Ultimate UTU Attendance App</p>
       </div>
 
       <div className="tabs">
@@ -132,6 +138,14 @@ function App() {
         >
           📊 Dashboard
         </button>
+        {results && (
+          <button
+            className={`tab-btn ${activeTab === 'History' ? 'active' : ''}`}
+            onClick={() => setActiveTab('History')}
+          >
+            📋 Subject History
+          </button>
+        )}
         <button
           className={`tab-btn ${activeTab === 'Daily' ? 'active' : ''}`}
           onClick={() => setActiveTab('Daily')}
@@ -157,6 +171,8 @@ function App() {
       {activeTab === 'Daily' && <DailyPlanner results={results} />}
 
       {activeTab === 'Calendar' && <AcademicCalendar />}
+
+      {activeTab === 'History' && <SubjectHistory results={results} />}
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>

@@ -110,7 +110,7 @@ export default function DailyPlanner({ results }) {
 
             {selectedDay === initialDay && holidayToday && (
                 <div className="status-safe mb-2 text-center" style={{ background: 'rgba(16, 185, 129, 0.15)', borderColor: 'var(--secondary)' }}>
-                    <h3 style={{ margin: 0, color: 'var(--secondary)' }}>🎉 YouTu Holiday!</h3>
+                    <h3 style={{ margin: 0, color: 'var(--secondary)' }}>🎉 Skippie Holiday!</h3>
                     <p style={{ margin: '0.5rem 0 0' }}>Today is officially <strong>{holidayToday.Title} ({holidayToday.SubjectH})</strong>. Your classes have defaulted to being unchecked (bunked) to protect you!</p>
                 </div>
             )}
