@@ -12,6 +12,14 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+[data-theme="light"] {
+  --bg-color: #F8FAFC;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --border: rgba(0, 0, 0, 0.1);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -252,38 +260,50 @@ button:disabled {
   .app-container {
     gap: 1rem;
   }
+
   .glass-card {
     padding: 1rem;
   }
+
   .header h1 {
     font-size: 2rem;
   }
+
   .stats-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
     margin-bottom: 1rem;
   }
+
   .stat-card {
     padding: 1rem;
   }
+
   .action-plan-grid {
     gap: 1rem;
   }
+
   .day-action-card {
     padding: 1rem;
   }
+
   .form-group {
     gap: 0.25rem;
   }
-  input, select, button {
+
+  input,
+  select,
+  button {
     padding: 0.6rem 0.8rem;
   }
+
   .tabs {
     flex-wrap: wrap;
     gap: 0.5rem;
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
   }
+
   .tab-btn {
     flex: 1 1 45%;
     font-size: 0.8rem;
@@ -318,13 +338,19 @@ button:disabled {
     border: none;
     padding: 0;
   }
+
   .timetable thead {
     display: none;
   }
-  .timetable, .timetable tbody, .timetable tr, .timetable td {
+
+  .timetable,
+  .timetable tbody,
+  .timetable tr,
+  .timetable td {
     display: block;
     width: 100%;
   }
+
   .timetable tr {
     margin-bottom: 1rem;
     border: 1px solid var(--border);
@@ -332,6 +358,7 @@ button:disabled {
     background: rgba(15, 23, 42, 0.6);
     overflow: hidden;
   }
+
   .timetable td {
     display: flex;
     justify-content: space-between;
@@ -340,9 +367,11 @@ button:disabled {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding: 0.75rem 1rem;
   }
+
   .timetable td:last-child {
     border-bottom: none;
   }
+
   .timetable td::before {
     content: attr(data-label);
     font-weight: 600;
@@ -351,6 +380,7 @@ button:disabled {
     flex: 0 0 60px;
     text-align: left;
   }
+
   .timetable .day-label {
     background: rgba(79, 70, 229, 0.4);
     font-size: 1.1rem;
@@ -360,9 +390,11 @@ button:disabled {
     display: block;
     border-bottom: 1px solid var(--border);
   }
+
   .timetable .day-label::before {
     content: none;
   }
+
   .tt-input {
     width: 65%;
     background: rgba(15, 23, 42, 0.8);

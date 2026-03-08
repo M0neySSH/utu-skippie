@@ -23,6 +23,60 @@ function App() {
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [showGuide, setShowGuide] = useState(false);
 
+  // Theme Management
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('skippie_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('skippie_theme', theme);
+  }, [theme]);
+
+  // Daily Notifications
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+
+    const lastNotified = localStorage.getItem('skippie_last_notified');
+    const todayStr = new Date().toDateString();
+
+    if (lastNotified !== todayStr && 'Notification' in window && Notification.permission === 'granted') {
+      try {
+        const cachedCalendar = localStorage.getItem('uktech_calendar');
+        let holidayToday = null;
+
+        if (cachedCalendar) {
+          const holidays = JSON.parse(cachedCalendar);
+          const todayStart = new Date().setHours(0, 0, 0, 0);
+          holidayToday = holidays.find(h => new Date(h.Date).setHours(0, 0, 0, 0) === todayStart);
+        }
+
+        if (holidayToday) {
+          new Notification('🎉 Skippie Holiday!', {
+            body: `Today is ${holidayToday.Title}. Relax and safely bunk classes!`,
+            icon: '/vite.svg'
+          });
+        } else {
+          const messages = [
+            "Good morning! Remember to check your Safe Bunks today.",
+            "Don't let your attendance drop below 75%!",
+            "Have a great day of classes! Check Skippie for your schedule."
+          ];
+          const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+          new Notification('Skippie Daily', {
+            body: randomMsg,
+            icon: '/vite.svg'
+          });
+        }
+        localStorage.setItem('skippie_last_notified', todayStr);
+      } catch (e) {
+        console.error("Error setting notification", e);
+      }
+    }
+  }, []);
+
   const bookmarkletCode = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('Skippie Config\\nCourseBranchDurationId: '+v1+'\\nStudentAdmissionId: '+v2+'\\nBranchId: '+v3);}})();`;
 
   const copyToClipboard = () => {
@@ -126,7 +180,21 @@ function App() {
   return (
     <div className="app-container">
 
-      <div className="header">
+      <div className="header" style={{ position: 'relative' }}>
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          style={{
+            position: 'absolute', top: 0, right: 0,
+            background: 'rgba(255,255,255,0.1)', border: '1px solid var(--border)',
+            borderRadius: '50%', width: '40px', height: '40px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '1.2rem', cursor: 'pointer'
+          }}
+          title="Toggle Light/Dark Mode"
+        >
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
         <h1>Skippie</h1>
         <p style={{ color: 'var(--text-muted)' }}>The Ultimate UTU Attendance App</p>
       </div>
