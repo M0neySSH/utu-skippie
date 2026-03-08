@@ -353,7 +353,7 @@ function App() {
       <div style={{ textAlign: 'center', marginTop: '1rem', padding: '1rem', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
         <p>Built for UTU Students</p>
         <p>
-          Developed with ❤️ by <a href="https://github.com/manish" target="_blank" rel="noopener noreferrer" style={{ color: '#818CF8', textDecoration: 'none' }}>Manish</a>
+          Developed with ❤️ by <a href="https://github.com/M0neySSH" target="_blank" rel="noopener noreferrer" style={{ color: '#818CF8', textDecoration: 'none' }}>Manish</a>
         </p>
         <button
           type="button"

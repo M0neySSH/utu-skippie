@@ -64,7 +64,7 @@ export default function AboutPage() {
 
             <div style={{ marginTop: '3rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', textAlign: 'center', color: 'var(--text-muted)' }}>
                 <p style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--text-main)', marginBottom: '0.5rem' }}>
-                    Developed with ❤️ by <a href="https://github.com/manish" target="_blank" rel="noopener noreferrer" style={{ color: '#818CF8', textDecoration: 'none' }}>Manish</a>
+                    Developed with ❤️ by <a href="https://github.com/M0neySSH" target="_blank" rel="noopener noreferrer" style={{ color: '#818CF8', textDecoration: 'none' }}>Manish</a>
                 </p>
                 <p style={{ fontSize: '0.9rem' }}>Empowering the Veer Madho Singh Bhandari Uttarakhand Technical University community.</p>
             </div>
