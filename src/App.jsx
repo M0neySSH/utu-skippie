@@ -6,6 +6,7 @@ import DailyPlanner from './components/DailyPlanner';
 import AcademicCalendar from './components/AcademicCalendar';
 import SubjectHistory from './components/SubjectHistory';
 import InstallPWA from './components/InstallPWA';
+import AboutPage from './components/AboutPage';
 import { useConfig } from './hooks/useConfig';
 
 function App() {
@@ -22,16 +23,6 @@ function App() {
   const [results, setResults] = useState(null);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [showGuide, setShowGuide] = useState(false);
-
-  // Theme Management
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('skippie_theme') || 'dark';
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('skippie_theme', theme);
-  }, [theme]);
 
   // Daily Notifications
   useEffect(() => {
@@ -180,23 +171,9 @@ function App() {
   return (
     <div className="app-container">
 
-      <div className="header" style={{ position: 'relative' }}>
-        <button
-          type="button"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          style={{
-            position: 'absolute', top: 0, right: 0,
-            background: 'rgba(255,255,255,0.1)', border: '1px solid var(--border)',
-            borderRadius: '50%', width: '40px', height: '40px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.2rem', cursor: 'pointer'
-          }}
-          title="Toggle Light/Dark Mode"
-        >
-          {theme === 'dark' ? '☀️' : '🌙'}
-        </button>
-        <h1>Skippie</h1>
-        <p style={{ color: 'var(--text-muted)' }}>The Ultimate UTU Attendance App</p>
+      <div className="header">
+        <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
+        <p style={{ color: 'var(--text-muted)' }}>Master Your Attendance, Plan Your Bunks!</p>
       </div>
 
       <div className="tabs">
@@ -232,6 +209,12 @@ function App() {
         >
           📚 Academic Calendar
         </button>
+        <button
+          className={`tab-btn ${activeTab === 'About' ? 'active' : ''}`}
+          onClick={() => setActiveTab('About')}
+        >
+          💡 About
+        </button>
       </div>
 
       {activeTab === 'Timetable' && <TimeTable />}
@@ -241,6 +224,8 @@ function App() {
       {activeTab === 'Calendar' && <AcademicCalendar />}
 
       {activeTab === 'History' && <SubjectHistory results={results} />}
+
+      {activeTab === 'About' && <AboutPage />}
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
