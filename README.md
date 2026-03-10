@@ -27,12 +27,12 @@ Tracking university attendance shouldn't feel like a second job. Between calcula
 *(Replace the placeholder URLs below with the actual paths to your screenshots once uploaded to GitHub)*
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x400.png?text=Dashboard+Screenshot+Here" width="80%" alt="Skippie Dashboard" />
+  <img src="Screenshot 2026-03-10 082042.png" />
 </div>
 
 <div align="center">
-  <img src="https://via.placeholder.com/400x400.png?text=Smart+Plan+Screenshot+Here" width="40%" alt="Smart Action Plan" />
-  <img src="https://via.placeholder.com/400x400.png?text=Daily+Simulator+Screenshot+Here" width="40%" alt="Daily Simulator" />
+  <img src="Screenshot 2026-03-10 082649.png" />
+  <img src="Screenshot 2026-03-10 082621.png" />
 </div>
 
 ---
