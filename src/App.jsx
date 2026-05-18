@@ -9,6 +9,13 @@ import InstallPWA from './components/InstallPWA';
 import AboutPage from './components/AboutPage';
 import { useConfig } from './hooks/useConfig';
 
+const APP_VERSION = '1.1';
+const WHATS_NEW = [
+  'Attendance now displays up to 2 accurate decimal places',
+  'Improved attendance calculation accuracy across all views',
+  'Drop your feedback,suggestions and feature requests at Skippie\'s GitHub Issues tab!',
+];
+
 function App() {
   const { config, updateConfig } = useConfig();
   const [formData, setFormData] = useState(config);
@@ -23,6 +30,15 @@ function App() {
   const [results, setResults] = useState(null);
   const [activeTab, setActiveTab] = useState('Dashboard');
   const [showGuide, setShowGuide] = useState(false);
+  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
+
+  // One-time update banner
+  useEffect(() => {
+    const lastSeen = localStorage.getItem('skippie_last_seen_version');
+    if (lastSeen !== APP_VERSION) {
+      setShowUpdateBanner(true);
+    }
+  }, []);
 
   // Daily Notifications
   useEffect(() => {
@@ -191,6 +207,35 @@ function App() {
         <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
         <p style={{ color: 'var(--text-muted)' }}>Predictive Intelligence for UTU Attendance Planning</p>
       </div>
+
+      {showUpdateBanner && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(56, 189, 248, 0.15))',
+          border: '1px solid rgba(99, 102, 241, 0.4)',
+          borderRadius: '0.75rem',
+          padding: '1.25rem',
+          marginBottom: '1rem',
+          animation: 'fadeIn 0.5s ease-out',
+          position: 'relative'
+        }}>
+          <button
+            onClick={() => {
+              setShowUpdateBanner(false);
+              localStorage.setItem('skippie_last_seen_version', APP_VERSION);
+            }}
+            style={{
+              position: 'absolute', top: '0.5rem', right: '0.75rem',
+              background: 'none', border: 'none', color: 'var(--text-muted)',
+              fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.25rem 0.25rem 0.25rem',
+              marginTop: '0.5rem', width: '7%',
+            }}
+          >✕</button>
+          <h3 style={{ margin: '0 0 0.5rem', color: '#818CF8', fontSize: '1rem' }}>✨ What's New in v{APP_VERSION}</h3>
+          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-main)', fontSize: '0.875rem', lineHeight: '1.6' }}>
+            {WHATS_NEW.map((item, i) => <li key={i}>{item}</li>)}
+          </ul>
+        </div>
+      )}
 
       <div className="tabs">
         <button
