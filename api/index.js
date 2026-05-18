@@ -79,7 +79,10 @@ app.post('/api/attendance', async (req, res) => {
                 if (a === "L") return 0;
                 if (a === "P, P" || a === "P,P") return 2;
                 if (a === "A, A" || a === "A,A") return -2;
-                if (a === "A, P" || a === "A,P" || a === "P, A" || a === "P,A") return 3;
+                if (a === "P, A" || a === "P,A" || a === "A, P" || a === "A,P") return 3;
+                if (a === "P, L" || a === "P,L" || a === "L, P" || a === "L,P") return 4;
+                if (a === "A, L" || a === "A,L" || a === "L, A" || a === "L,A") return 5;
+                if (a === "L, L" || a === "L,L") return 6;
                 return null;
             });
 

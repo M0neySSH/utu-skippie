@@ -51,6 +51,21 @@ export default function SubjectHistory({ results }) {
                                 borderColor = '#f97316';
                                 textColor = '#f97316';
                                 label = 'P/A';
+                            } else if (status === 4) {
+                                bgColor = 'rgba(16, 185, 129, 0.15)';
+                                borderColor = '#22d3ee';
+                                textColor = '#22d3ee';
+                                label = 'P/L';
+                            } else if (status === 5) {
+                                bgColor = 'rgba(239, 68, 68, 0.15)';
+                                borderColor = '#fb923c';
+                                textColor = '#fb923c';
+                                label = 'A/L';
+                            } else if (status === 6) {
+                                bgColor = 'rgba(245, 158, 11, 0.15)';
+                                borderColor = 'var(--warning)';
+                                textColor = 'var(--warning)';
+                                label = 'L/L';
                             } else if (status > 0) {
                                 bgColor = 'rgba(16, 185, 129, 0.15)';
                                 borderColor = 'var(--secondary)';
@@ -81,7 +96,7 @@ export default function SubjectHistory({ results }) {
                                 }}>
                                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>{dayNumber}</span>
                                     <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: textColor }}>
-                                        {label}{(Math.abs(status) > 1 && status !== 3) ? `x${Math.abs(status)}` : ''}
+                                        {label}{(Math.abs(status) > 1 && status !== 3 && status !== 4 && status !== 5 && status !== 6) ? `x${Math.abs(status)}` : ''}
                                     </span>
                                 </div>
                             );

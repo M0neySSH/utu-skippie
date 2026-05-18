@@ -91,8 +91,21 @@ function App() {
         subject.attendance.forEach(val => {
           if (val !== null) {
             if (val === 3) {
+              // P/A: 2 classes conducted, 1 attended
               total_attended += 1;
               total_conducted += 2;
+            } else if (val === 4) {
+              // P/L: 1 class conducted + 1 attended + 1 leave
+              total_attended += 1;
+              total_conducted += 1;
+              leaves += 1;
+            } else if (val === 5) {
+              // A/L: 1 class conducted + 0 attended + 1 leave
+              total_conducted += 1;
+              leaves += 1;
+            } else if (val === 6) {
+              // L/L: 2 leaves
+              leaves += 2;
             } else if (val > 0) {
               total_attended += val;
               total_conducted += val;
@@ -324,7 +337,7 @@ function App() {
                 '--state-color': results.percentage >= 75 ? 'var(--secondary)' : 'var(--danger)'
               }}
             >
-              <span>{results.percentage.toFixed(1)}%</span>
+              <span>{results.percentage.toFixed(2)}%</span>
             </div>
 
             <div className="stats-grid">
