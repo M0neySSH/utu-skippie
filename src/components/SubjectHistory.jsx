@@ -46,7 +46,12 @@ export default function SubjectHistory({ results }) {
                             let textColor = 'var(--text-muted)';
                             let label = '-';
 
-                            if (status > 0) {
+                            if (status === 3) {
+                                bgColor = 'rgba(249, 115, 22, 0.15)';
+                                borderColor = '#f97316';
+                                textColor = '#f97316';
+                                label = 'P/A';
+                            } else if (status > 0) {
                                 bgColor = 'rgba(16, 185, 129, 0.15)';
                                 borderColor = 'var(--secondary)';
                                 textColor = 'var(--secondary)';
@@ -76,7 +81,7 @@ export default function SubjectHistory({ results }) {
                                 }}>
                                     <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '0.1rem' }}>{dayNumber}</span>
                                     <span style={{ fontWeight: 'bold', fontSize: '0.95rem', color: textColor }}>
-                                        {label}{Math.abs(status) > 1 ? `x${Math.abs(status)}` : ''}
+                                        {label}{(Math.abs(status) > 1 && status !== 3) ? `x${Math.abs(status)}` : ''}
                                     </span>
                                 </div>
                             );

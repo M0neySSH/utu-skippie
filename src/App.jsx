@@ -90,7 +90,10 @@ function App() {
       month.data.forEach(subject => {
         subject.attendance.forEach(val => {
           if (val !== null) {
-            if (val > 0) {
+            if (val === 3) {
+              total_attended += 1;
+              total_conducted += 2;
+            } else if (val > 0) {
               total_attended += val;
               total_conducted += val;
             } else if (val < 0) {
