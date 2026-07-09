@@ -290,33 +290,33 @@ function App() {
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
           <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <span>Student Details</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              Student Details
+              {hasSession && (
+                <span title="Session active" style={{
+                  display: 'inline-block', width: '10px', height: '10px',
+                  borderRadius: '50%', background: 'var(--secondary)',
+                  boxShadow: '0 0 6px var(--secondary)', flexShrink: 0,
+                }} />
+              )}
+            </span>
             {hasSession && (
               <button
                 type="button"
+                title="Logout"
                 onClick={() => { setSession(null); setShowLogin(true); }}
-                style={{ width: 'auto', margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: 'rgba(239,68,68,0.15)', border: '1px solid var(--danger)', color: 'var(--danger)' }}
+                style={{
+                  width: 'auto', margin: 0, padding: '0.35rem 0.7rem',
+                  fontSize: '1.1rem', lineHeight: 1,
+                  background: 'rgba(239,68,68,0.1)',
+                  border: '1px solid rgba(239,68,68,0.35)',
+                  color: 'var(--danger)', borderRadius: '0.4rem', cursor: 'pointer',
+                }}
               >
-                🔄 Re-login
+                🚪
               </button>
             )}
           </h2>
-
-          {/* Session status indicator */}
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '0.5rem',
-            padding: '0.6rem 1rem', borderRadius: '0.4rem', marginBottom: '1.5rem',
-            background: hasSession ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)',
-            border: `1px solid ${hasSession ? 'var(--secondary)' : 'var(--warning)'}`,
-            fontSize: '0.875rem',
-          }}>
-            <span>{hasSession ? '🟢' : '🟡'}</span>
-            <span style={{ color: hasSession ? 'var(--secondary)' : 'var(--warning)' }}>
-              {hasSession
-                ? 'Logged in — session active'
-                : 'Not logged in — will prompt on fetch'}
-            </span>
-          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-grid">
