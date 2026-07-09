@@ -240,9 +240,47 @@ function App() {
         onClose={() => setShowLogin(false)}
         hasExisting={hasSession}
       />
+      {/* Fixed top-right session indicator */}
+      {hasSession && (
+        <div style={{
+          position: 'fixed', top: '1rem', right: '1rem', zIndex: 1000,
+          display: 'flex', alignItems: 'center', gap: '0.4rem',
+        }}>
+          <span title="Session active" style={{
+            display: 'inline-block', width: '9px', height: '9px',
+            borderRadius: '50%', background: 'var(--secondary)',
+            boxShadow: '0 0 8px var(--secondary)',
+            animation: 'pulse 2s infinite',
+          }} />
+          <button
+            type="button"
+            title="Logout"
+            onClick={() => { setSession(null); setShowLogin(true); }}
+            style={{
+              background: 'none', border: 'none', padding: '0.3rem 0.4rem',
+              fontSize: '1.1rem', cursor: 'pointer', lineHeight: 1,
+              opacity: 0.6, transition: 'opacity 0.2s, transform 0.2s',
+              color: 'var(--danger)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1.2)'; }}
+            onMouseLeave={e => { e.currentTarget.style.opacity = '0.6'; e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            🚪
+          </button>
+        </div>
+      )}
 
       <div className="header">
-        <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
+        <h1 style={{ marginBottom: '0.2rem' }}>
+          Skippie
+          <span style={{
+            display: 'inline-block', marginLeft: '0.6rem',
+            fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.05em',
+            background: 'linear-gradient(135deg, #4F46E5, #10B981)',
+            color: '#fff', padding: '0.15rem 0.5rem', borderRadius: '999px',
+            verticalAlign: 'middle', position: 'relative', top: '-3px',
+          }}>v2.0</span>
+        </h1>
         <p style={{ color: 'var(--text-muted)' }}>Predictive Intelligence for UTU Attendance Planning</p>
       </div>
 
@@ -289,34 +327,7 @@ function App() {
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
-          <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              Student Details
-              {hasSession && (
-                <span title="Session active" style={{
-                  display: 'inline-block', width: '10px', height: '10px',
-                  borderRadius: '50%', background: 'var(--secondary)',
-                  boxShadow: '0 0 6px var(--secondary)', flexShrink: 0,
-                }} />
-              )}
-            </span>
-            {hasSession && (
-              <button
-                type="button"
-                title="Logout"
-                onClick={() => { setSession(null); setShowLogin(true); }}
-                style={{
-                  width: 'auto', margin: 0, padding: '0.35rem 0.7rem',
-                  fontSize: '1.1rem', lineHeight: 1,
-                  background: 'rgba(239,68,68,0.1)',
-                  border: '1px solid rgba(239,68,68,0.35)',
-                  color: 'var(--danger)', borderRadius: '0.4rem', cursor: 'pointer',
-                }}
-              >
-                🚪
-              </button>
-            )}
-          </h2>
+          <h2>Student Details</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="form-grid">

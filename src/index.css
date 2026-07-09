@@ -568,3 +568,8 @@ button:disabled {
   background: var(--primary);
   color: white;
 }
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 6px var(--secondary); opacity: 1; }
+  50% { box-shadow: 0 0 14px var(--secondary); opacity: 0.7; }
+}
