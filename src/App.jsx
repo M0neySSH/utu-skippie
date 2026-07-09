@@ -240,35 +240,6 @@ function App() {
         onClose={() => setShowLogin(false)}
         hasExisting={hasSession}
       />
-      {/* Fixed top-right session indicator */}
-      {hasSession && (
-        <div style={{
-          position: 'fixed', top: '1rem', right: '1rem', zIndex: 1000,
-          display: 'flex', alignItems: 'center', gap: '0.4rem',
-        }}>
-          <span title="Session active" style={{
-            display: 'inline-block', width: '9px', height: '9px',
-            borderRadius: '50%', background: 'var(--secondary)',
-            boxShadow: '0 0 8px var(--secondary)',
-            animation: 'pulse 2s infinite',
-          }} />
-          <button
-            type="button"
-            title="Logout"
-            onClick={() => { setSession(null); setShowLogin(true); }}
-            style={{
-              background: 'none', border: 'none', padding: '0.3rem 0.4rem',
-              fontSize: '1.1rem', cursor: 'pointer', lineHeight: 1,
-              opacity: 0.6, transition: 'opacity 0.2s, transform 0.2s',
-              color: 'var(--danger)',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'scale(1.2)'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '0.6'; e.currentTarget.style.transform = 'scale(1)'; }}
-          >
-            🚪
-          </button>
-        </div>
-      )}
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>
@@ -327,7 +298,41 @@ function App() {
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
-          <h2>Student Details</h2>
+          <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+              Student Details
+              {hasSession && (
+                <span title="Session active" style={{
+                  display: 'inline-block', width: '8px', height: '8px',
+                  borderRadius: '50%', background: 'var(--secondary)',
+                  boxShadow: '0 0 6px var(--secondary)',
+                  animation: 'pulse 2s infinite', flexShrink: 0,
+                }} />
+              )}
+            </span>
+            {hasSession && (
+              <button
+                type="button"
+                title="Logout"
+                onClick={() => { setSession(null); setShowLogin(true); }}
+                style={{
+                  background: 'none', border: 'none', padding: '0.3rem',
+                  cursor: 'pointer', color: 'var(--text-muted)',
+                  opacity: 0.55, transition: 'opacity 0.2s, color 0.2s',
+                  display: 'flex', alignItems: 'center',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--danger)'; }}
+                onMouseLeave={e => { e.currentTarget.style.opacity = '0.55'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+              >
+                {/* Logout / sign-out SVG icon */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            )}
+          </h2>
 
           <form onSubmit={handleSubmit}>
             <div className="form-grid">
