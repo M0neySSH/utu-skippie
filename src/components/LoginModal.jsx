@@ -18,7 +18,16 @@ export default function LoginModal({ isOpen, onSuccess, onClose, hasExisting }) 
     const [captchaBase64, setCaptchaBase64] = useState(null);
     const [sessionCookiesTemp, setSessionCookiesTemp] = useState(null);
     const [rftTemp, setRftTemp] = useState(null);
-    const [formData, setFormData] = useState({ rollNo: '', dateOfBirth: '', captcha: '' });
+    const [formData, setFormData] = useState(() => {
+        try {
+            const saved = localStorage.getItem('skippie_login_credentials');
+            if (saved) {
+                const { rollNo, dateOfBirth } = JSON.parse(saved);
+                return { rollNo: rollNo || '', dateOfBirth: dateOfBirth || '', captcha: '' };
+            }
+        } catch (e) { /* ignore */ }
+        return { rollNo: '', dateOfBirth: '', captcha: '' };
+    });
     const [error, setError] = useState(null);
 
     // Load captcha when modal opens
@@ -82,7 +91,11 @@ export default function LoginModal({ isOpen, onSuccess, onClose, hasExisting }) 
                 setFormData(prev => ({ ...prev, captcha: '' }));
                 return;
             }
-            // Login successful
+            // Login successful — save credentials for next re-login prefill
+            localStorage.setItem('skippie_login_credentials', JSON.stringify({
+                rollNo: formData.rollNo,
+                dateOfBirth: formData.dateOfBirth,
+            }));
             setStep('done');
             onSuccess({ sessionCookies: data.sessionCookies, rft: data.rft, token: data.token });
         } catch (e) {
