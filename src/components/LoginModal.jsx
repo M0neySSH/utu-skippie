@@ -30,9 +30,13 @@ export default function LoginModal({ isOpen, onSuccess, onClose, hasExisting }) 
     });
     const [error, setError] = useState(null);
 
-    // Load captcha when modal opens
+    // Reset and reload captcha every time the modal opens
     useEffect(() => {
-        if (isOpen && step === 'idle') {
+        if (isOpen) {
+            setStep('idle');
+            setCaptchaBase64(null);
+            setError(null);
+            setFormData(prev => ({ ...prev, captcha: '' }));
             loadCaptcha();
         }
     }, [isOpen]);
@@ -61,7 +65,8 @@ export default function LoginModal({ isOpen, onSuccess, onClose, hasExisting }) 
     }
 
     function handleChange(e) {
-        setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        const value = e.target.name === 'captcha' ? e.target.value.toUpperCase() : e.target.value;
+        setFormData(prev => ({ ...prev, [e.target.name]: value }));
     }
 
     async function handleLogin(e) {
