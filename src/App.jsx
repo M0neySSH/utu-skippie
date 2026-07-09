@@ -3,11 +3,10 @@ import './index.css';
 import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
 import DailyPlanner from './components/DailyPlanner';
-import AcademicCalendar from './components/AcademicCalendar';
-import SubjectHistory from './components/SubjectHistory';
 import InstallPWA from './components/InstallPWA';
 import AboutPage from './components/AboutPage';
 import LoginModal from './components/LoginModal';
+import WhatsNewModal from './components/WhatsNewModal';
 import { useConfig } from './hooks/useConfig';
 import { useSession } from './hooks/useSession';
 
@@ -240,6 +239,8 @@ function App() {
         onClose={() => setShowLogin(false)}
         hasExisting={hasSession}
       />
+      
+      <WhatsNewModal />
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>
@@ -298,39 +299,40 @@ function App() {
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
-          <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
-              Student Details
-              {hasSession && (
+          <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+            <span>Student Details</span>
+            {hasSession && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '0.6rem',
+                border: '1px solid var(--border)', borderRadius: '0.5rem',
+                padding: '0.3rem 0.6rem', background: 'rgba(255,255,255,0.02)'
+              }}>
                 <span title="Session active" style={{
-                  display: 'inline-block', width: '8px', height: '8px',
+                  display: 'inline-block', width: '6px', height: '6px',
                   borderRadius: '50%', background: 'var(--secondary)',
                   boxShadow: '0 0 6px var(--secondary)',
                   animation: 'pulse 2s infinite', flexShrink: 0,
                 }} />
-              )}
-            </span>
-            {hasSession && (
-              <button
-                type="button"
-                title="Logout"
-                onClick={() => { setSession(null); setShowLogin(true); }}
-                style={{
-                  background: 'none', border: 'none', padding: '0.3rem',
-                  cursor: 'pointer', color: 'var(--text-muted)',
-                  opacity: 0.55, transition: 'opacity 0.2s, color 0.2s',
-                  display: 'flex', alignItems: 'center',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--danger)'; }}
-                onMouseLeave={e => { e.currentTarget.style.opacity = '0.55'; e.currentTarget.style.color = 'var(--text-muted)'; }}
-              >
-                {/* Logout / sign-out SVG icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </button>
+                <button
+                  type="button"
+                  title="Logout"
+                  onClick={() => { setSession(null); setShowLogin(true); }}
+                  style={{
+                    background: 'none', border: 'none', padding: '0',
+                    cursor: 'pointer', color: 'var(--text-muted)',
+                    opacity: 0.7, transition: 'opacity 0.2s, color 0.2s',
+                    display: 'flex', alignItems: 'center',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--danger)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = 'var(--text-muted)'; }}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 5 12 10 7" />
+                    <line x1="15" y1="12" x2="5" y2="12" />
+                  </svg>
+                </button>
+              </div>
             )}
           </h2>
 
