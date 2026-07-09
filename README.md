@@ -80,14 +80,9 @@ For the best experience, scroll to the bottom of the Skippie footer and tap **"I
 
 ---
 
-## 🛠️ Local Deployment & Development
+## 🛠️ Local Development Setup
 
-### Prerequisites
-
-- **Node.js** v18 or higher — [Download here](https://nodejs.org/)
-- **Git** — [Download here](https://git-scm.com/)
-
-### Step 1: Clone & Install
+If you wish to run the app locally and contribute to the source code:
 
 ```bash
 # Clone the repository
@@ -96,56 +91,11 @@ git clone https://github.com/M0neySSH/utu-skippie.git
 # Navigate into the directory
 cd utu-skippie
 
-# Install all dependencies
+# Install dependencies
 npm install
-```
 
-### Step 2: Start the Backend API Server
-
-The app needs a local proxy server to communicate with the UKTECH attendance portal. Open a terminal and run:
-
-```bash
-node server.js
-```
-
-You should see:
-```
-✅ Local API server running at http://localhost:3000
-```
-
-> ⚠️ **Keep this terminal open.** The API server must stay running while you use the app.
-
-### Step 3: Start the Frontend Dev Server
-
-Open a **second terminal** (keep the first one running) and start the Vite development server:
-
-```bash
+# Start the Vite development server
 npm run dev
-```
-
-You should see:
-```
-VITE v7.x.x  ready in XXX ms
-
-➜  Local:   http://localhost:5173/
-```
-
-### Step 4: Open the App
-
-Navigate to **http://localhost:5173/** in your browser. That's it — Skippie is now running locally! 🚀
-
-> **How it works:** The Vite dev server serves the React frontend on port `5173` and automatically proxies all `/api/*` requests to the backend running on port `3000`.
-
-### 🏗️ Production Build (Optional)
-
-If you want to create an optimized production bundle:
-
-```bash
-# Build the production bundle
-npm run build
-
-# Preview the production build
-npm run preview
 ```
 
 ---

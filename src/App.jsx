@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './index.css';
 import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
@@ -7,17 +7,13 @@ import AcademicCalendar from './components/AcademicCalendar';
 import SubjectHistory from './components/SubjectHistory';
 import InstallPWA from './components/InstallPWA';
 import AboutPage from './components/AboutPage';
+import LoginModal from './components/LoginModal';
 import { useConfig } from './hooks/useConfig';
-
-const APP_VERSION = '1.1';
-const WHATS_NEW = [
-  'Attendance now displays up to 2 accurate decimal places',
-  'Improved attendance calculation accuracy across all views',
-  'Drop your feedback,suggestions and feature requests at Skippie\'s GitHub Issues tab!',
-];
+import { useSession } from './hooks/useSession';
 
 function App() {
   const { config, updateConfig } = useConfig();
+  const { session, setSession, hasSession } = useSession();
   const [formData, setFormData] = useState(config);
 
   // Sync formData to hook config whenever it changes
@@ -29,16 +25,11 @@ function App() {
   const [error, setError] = useState(null);
   const [results, setResults] = useState(null);
   const [activeTab, setActiveTab] = useState('Dashboard');
-  const [showGuide, setShowGuide] = useState(false);
-  const [showUpdateBanner, setShowUpdateBanner] = useState(false);
 
-  // One-time update banner
-  useEffect(() => {
-    const lastSeen = localStorage.getItem('skippie_last_seen_version');
-    if (lastSeen !== APP_VERSION) {
-      setShowUpdateBanner(true);
-    }
-  }, []);
+  // Login modal state
+  const [showLogin, setShowLogin] = useState(false);
+  // When session expires mid-fetch, we store the pending fetch params and retry after login
+  const pendingFetchRef = useRef(null);
 
   // Daily Notifications
   useEffect(() => {
@@ -83,13 +74,6 @@ function App() {
       }
     }
   }, []);
-
-  const bookmarkletCode = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('Skippie Config\\nCourseBranchDurationId: '+v1+'\\nStudentAdmissionId: '+v2+'\\nBranchId: '+v3);}})();`;
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(`"${bookmarkletCode}"`);
-    alert("Copied to clipboard! (Remember to remove the quotes before pasting into your browser url bar)");
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -138,59 +122,79 @@ function App() {
     return { total_attended, total_conducted, leaves };
   };
 
+  /**
+   * Core fetch function — uses session tokens.
+   * Returns resultsArray on success, or throws/signals session expired.
+   */
+  async function fetchAttendanceWithSession(activeSession, startMonth, endMonth, sessionYear, courseBranchDurationId) {
+    const requests = [];
+    for (let m = startMonth; m <= endMonth; m++) {
+      requests.push(
+        fetch('/api/attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionCookies: activeSession.sessionCookies,
+            rft: activeSession.rft,
+            token: activeSession.token,
+            SessionYear: sessionYear,
+            CourseBranchDurationId: courseBranchDurationId,
+            Year: sessionYear,
+            MonthId: m.toString(),
+          }),
+        }).then(res => {
+          if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
+          return res.json().then(data => ({ ...data, monthId: m, yearId: parseInt(sessionYear) }));
+        })
+      );
+    }
+    return await Promise.all(requests);
+  }
+
+  function processResults(resultsArray, name) {
+    const { total_attended, total_conducted, leaves } = calculateAttendance(resultsArray);
+    if (total_conducted === 0) {
+      throw new Error("No attendance data found for the selected timeline. Try different months.");
+    }
+    const percentage = (total_attended / total_conducted) * 100;
+    setResults({ total_attended, total_conducted, leaves, percentage, monthsData: resultsArray });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setResults(null);
 
+    const start = parseInt(formData.StartMonth);
+    const end = parseInt(formData.EndMonth);
+    if (start > end) {
+      setError("Start month cannot be after end month");
+      return;
+    }
+
+    // No session yet — show login first, then we'll auto-fetch
+    if (!hasSession) {
+      pendingFetchRef.current = { start, end };
+      setShowLogin(true);
+      return;
+    }
+
+    setLoading(true);
     try {
-      const start = parseInt(formData.StartMonth);
-      const end = parseInt(formData.EndMonth);
+      const resultsArray = await fetchAttendanceWithSession(
+        session, start, end, formData.SessionYear, formData.CourseBranchDurationId
+      );
 
-      if (start > end) {
-        throw new Error("Start month cannot be after end month");
+      // Check if any month returned SESSION_EXPIRED
+      const expired = resultsArray.find(r => r.reason === 'SESSION_EXPIRED');
+      if (expired) {
+        pendingFetchRef.current = { start, end };
+        setShowLogin(true);
+        setLoading(false);
+        return;
       }
 
-      const requests = [];
-      for (let m = start; m <= end; m++) {
-        requests.push(
-          fetch('/api/attendance', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ...formData,
-              MonthId: m.toString()
-            })
-          }).then(res => {
-            if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-            return res.json().then(data => ({
-              ...data,
-              monthId: m,
-              yearId: parseInt(formData.SessionYear)
-            }));
-          })
-        );
-      }
-
-      const resultsArray = await Promise.all(requests);
-
-      const { total_attended, total_conducted, leaves } = calculateAttendance(resultsArray);
-
-      if (total_conducted === 0) {
-        throw new Error("No attendance data found for the selected timeline.");
-      }
-
-      const percentage = (total_attended / total_conducted) * 100;
-
-      setResults({
-        total_attended,
-        total_conducted,
-        leaves,
-        percentage,
-        monthsData: resultsArray
-      });
-
+      processResults(resultsArray, formData.Name);
     } catch (err) {
       setError(err.message || 'Failed to fetch attendance data.');
     } finally {
@@ -198,44 +202,49 @@ function App() {
     }
   };
 
-  // Replaced by SmartBunking component
+  // Called after successful login — save session and auto-retry pending fetch
+  const handleLoginSuccess = async (newSession) => {
+    setSession(newSession);
+    setShowLogin(false);
+
+    if (!pendingFetchRef.current) return;
+
+    const { start, end } = pendingFetchRef.current;
+    pendingFetchRef.current = null;
+
+    setLoading(true);
+    setError(null);
+    try {
+      const resultsArray = await fetchAttendanceWithSession(
+        newSession, start, end, formData.SessionYear, formData.CourseBranchDurationId
+      );
+      const expired = resultsArray.find(r => r.reason === 'SESSION_EXPIRED');
+      if (expired) {
+        setError("Session still invalid after login. Please try logging in again.");
+        return;
+      }
+      processResults(resultsArray, formData.Name);
+    } catch (err) {
+      setError(err.message || 'Failed to fetch attendance data after login.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="app-container">
+
+      <LoginModal
+        isOpen={showLogin}
+        onSuccess={handleLoginSuccess}
+        onClose={() => setShowLogin(false)}
+        hasExisting={hasSession}
+      />
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>Skippie</h1>
         <p style={{ color: 'var(--text-muted)' }}>Predictive Intelligence for UTU Attendance Planning</p>
       </div>
-
-      {showUpdateBanner && (
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(56, 189, 248, 0.15))',
-          border: '1px solid rgba(99, 102, 241, 0.4)',
-          borderRadius: '0.75rem',
-          padding: '1.25rem',
-          marginBottom: '1rem',
-          animation: 'fadeIn 0.5s ease-out',
-          position: 'relative'
-        }}>
-          <button
-            onClick={() => {
-              setShowUpdateBanner(false);
-              localStorage.setItem('skippie_last_seen_version', APP_VERSION);
-            }}
-            style={{
-              position: 'absolute', top: '0.5rem', right: '0.75rem',
-              background: 'none', border: 'none', color: 'var(--text-muted)',
-              fontSize: '1.2rem', cursor: 'pointer', padding: '0 0.25rem 0.25rem 0.25rem',
-              marginTop: '0.5rem', width: '7%',
-            }}
-          >✕</button>
-          <h3 style={{ margin: '0 0 0.5rem', color: '#818CF8', fontSize: '1rem' }}>✨ What's New in v{APP_VERSION}</h3>
-          <ul style={{ margin: 0, paddingLeft: '1.25rem', color: 'var(--text-main)', fontSize: '0.875rem', lineHeight: '1.6' }}>
-            {WHATS_NEW.map((item, i) => <li key={i}>{item}</li>)}
-          </ul>
-        </div>
-      )}
 
       <div className="tabs">
         <button
@@ -273,77 +282,55 @@ function App() {
       </div>
 
       {activeTab === 'Timetable' && <TimeTable />}
-
       {activeTab === 'Daily' && <DailyPlanner results={results} />}
-
       {activeTab === 'Calendar' && <AcademicCalendar />}
-
       {activeTab === 'History' && <SubjectHistory results={results} />}
-
       {activeTab === 'About' && <AboutPage />}
 
       <>
         <div className="glass-card" style={{ display: activeTab === 'Dashboard' ? 'block' : 'none' }}>
           <h2 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <span>Student Details</span>
-            <button
-              type="button"
-              onClick={() => setShowGuide(!showGuide)}
-              style={{ width: 'auto', margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: 'rgba(255,255,255,0.1)', border: '1px solid var(--border)' }}
-            >
-              ❓ How to find my IDs?
-            </button>
+            {hasSession && (
+              <button
+                type="button"
+                onClick={() => { setSession(null); setShowLogin(true); }}
+                style={{ width: 'auto', margin: 0, padding: '0.4rem 0.8rem', fontSize: '0.8rem', background: 'rgba(239,68,68,0.15)', border: '1px solid var(--danger)', color: 'var(--danger)' }}
+              >
+                🔄 Re-login
+              </button>
+            )}
           </h2>
 
-          {showGuide && (
-            <div style={{ background: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-              <h4 style={{ color: '#38bdf8', marginBottom: '0.5rem' }}>Auto-Extractor Guide</h4>
-              <ol style={{ marginLeft: '1.5rem', marginBottom: '1rem', color: 'var(--text-main)', lineHeight: '1.5' }}>
-                <li>Go to your official UKTECH student dashboard.</li>
-                <li>Navigate to the <strong>Student Attendance System</strong> page.</li>
-                <li>Select your Semester/Year/Session dropdowns on that page.</li>
-                <li>Copy the special code below.</li>
-                <li>Paste it into your browser's URL address bar on the UKTECH page and hit Enter. <em>(Note: You MUST remove the quotation marks at the start and end of the pasted text!)</em></li>
-                <li>A popup will flash with your exact IDs!</li>
-              </ol>
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
-                <textarea
-                  readOnly
-                  value={`"${bookmarkletCode}"`}
-                  style={{ flex: 1, height: '60px', fontSize: '0.75rem', fontFamily: 'monospace', background: 'rgba(0,0,0,0.5)', color: '#34D399', border: '1px solid var(--border)', borderRadius: '0.3rem', padding: '0.5rem', resize: 'none' }}
-                />
-                <button type="button" onClick={copyToClipboard} style={{ width: 'auto', margin: 0, padding: '0.5rem', background: 'var(--secondary)' }}>
-                  📋 Copy
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Session status indicator */}
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            padding: '0.6rem 1rem', borderRadius: '0.4rem', marginBottom: '1.5rem',
+            background: hasSession ? 'rgba(16,185,129,0.1)' : 'rgba(245,158,11,0.1)',
+            border: `1px solid ${hasSession ? 'var(--secondary)' : 'var(--warning)'}`,
+            fontSize: '0.875rem',
+          }}>
+            <span>{hasSession ? '🟢' : '🟡'}</span>
+            <span style={{ color: hasSession ? 'var(--secondary)' : 'var(--warning)' }}>
+              {hasSession
+                ? 'Logged in — session active'
+                : 'Not logged in — will prompt on fetch'}
+            </span>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="form-grid">
               <div className="form-group">
-                <label>Name</label>
+                <label>Your Name</label>
                 <input type="text" name="Name" value={formData.Name} onChange={handleChange} required placeholder="E.g. Rahul" />
               </div>
               <div className="form-group">
-                <label>Roll No</label>
-                <input type="text" name="RollNo" value={formData.RollNo} onChange={handleChange} required placeholder="E.g. 123456789012" />
-              </div>
-              <div className="form-group">
-                <label>Student Admission ID</label>
-                <input type="text" name="StudentAdmissionId" value={formData.StudentAdmissionId} onChange={handleChange} required placeholder="E.g. 123456789012" />
-              </div>
-              <div className="form-group">
-                <label>Branch ID</label>
-                <input type="number" name="BranchId" value={formData.BranchId} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label>Duration ID</label>
-                <input type="number" name="CourseBranchDurationId" value={formData.CourseBranchDurationId} onChange={handleChange} required />
+                <label>Duration ID (CourseBranchDurationId)</label>
+                <input type="number" name="CourseBranchDurationId" value={formData.CourseBranchDurationId} onChange={handleChange} required placeholder="E.g. 6" />
               </div>
               <div className="form-group">
                 <label>Session Year</label>
-                <input type="number" name="SessionYear" value={formData.SessionYear} onChange={handleChange} required />
+                <input type="number" name="SessionYear" value={formData.SessionYear} onChange={handleChange} required placeholder="E.g. 2025" />
               </div>
               <div className="form-group">
                 <label>Start Month (1-12)</label>
@@ -359,7 +346,7 @@ function App() {
               </div>
             </div>
             <button type="submit" disabled={loading}>
-              {loading ? <div className="loader"></div> : 'Fetch & Analyze'}
+              {loading ? <div className="loader"></div> : (hasSession ? 'Fetch & Analyze' : '🔐 Login & Fetch')}
             </button>
           </form>
         </div>
