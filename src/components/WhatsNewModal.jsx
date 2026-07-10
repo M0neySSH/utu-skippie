@@ -29,14 +29,15 @@ export default function WhatsNewModal() {
             position: 'relative',
             animation: 'fadeIn 0.3s ease-out'
         }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <h3 style={{ 
                     color: '#818CF8', 
                     margin: 0,
-                    fontSize: '1.1rem',
+                    fontSize: '1.15rem',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem'
+                    gap: '0.4rem',
+                    lineHeight: 1
                 }}>
                     ✨ What's New in v2.0
                 </h3>
@@ -46,10 +47,14 @@ export default function WhatsNewModal() {
                         background: 'none',
                         border: 'none',
                         color: 'var(--text-muted)',
-                        fontSize: '1.2rem',
+                        fontSize: '1.3rem',
                         cursor: 'pointer',
-                        padding: '0.2rem',
-                        lineHeight: 1
+                        padding: '0',
+                        lineHeight: '0.005',
+                        display: 'flex',
+                        alignItems: 'right',
+                        justifyContent: 'right',
+                        transform: 'translateY(-2px)'
                     }}
                     title="Close"
                 >

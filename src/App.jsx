@@ -3,6 +3,8 @@ import './index.css';
 import TimeTable from './components/TimeTable';
 import SmartBunking from './components/SmartBunking';
 import DailyPlanner from './components/DailyPlanner';
+import AcademicCalendar from './components/AcademicCalendar';
+import SubjectHistory from './components/SubjectHistory';
 import InstallPWA from './components/InstallPWA';
 import AboutPage from './components/AboutPage';
 import LoginModal from './components/LoginModal';
@@ -304,12 +306,13 @@ function App() {
             <span>Student Details</span>
             {hasSession && (
               <div style={{
-                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                display: 'flex', alignItems: 'center', gap: '0.6rem',
+                lineHeight: 0
               }}>
                 <span title="Session active" style={{
                   display: 'inline-block', width: '8px', height: '8px',
                   borderRadius: '50%', background: 'var(--secondary)',
-                  boxShadow: '0 0 6px var(--secondary)',
+                  boxShadow: '0 0 8px var(--secondary)',
                   animation: 'pulse 2s infinite', flexShrink: 0,
                 }} />
                 <button
@@ -319,14 +322,14 @@ function App() {
                   style={{
                     background: 'none', border: 'none', padding: '0',
                     cursor: 'pointer', color: 'var(--text-muted)',
-                    opacity: 0.7, transition: 'opacity 0.2s, color 0.2s, transform 0.2s',
-                    display: 'flex', alignItems: 'center',
-                    transform: 'translateY(-1px)'
+                    opacity: 0.7, transition: 'opacity 0.2s, color 0.2s',
+                    display: 'flex', alignItems: 'center', justifyContent: 'right',
+                    lineHeight: 10,
                   }}
                   onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--danger)'; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = 'var(--text-muted)'; }}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
                     <polyline points="10 17 5 12 10 7" />
                     <line x1="15" y1="12" x2="5" y2="12" />
