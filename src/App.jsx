@@ -239,8 +239,7 @@ function App() {
         onClose={() => setShowLogin(false)}
         hasExisting={hasSession}
       />
-      
-      <WhatsNewModal />
+
 
       <div className="header">
         <h1 style={{ marginBottom: '0.2rem' }}>
@@ -255,6 +254,8 @@ function App() {
         </h1>
         <p style={{ color: 'var(--text-muted)' }}>Predictive Intelligence for UTU Attendance Planning</p>
       </div>
+
+      <WhatsNewModal />
 
       <div className="tabs">
         <button
@@ -303,9 +304,7 @@ function App() {
             <span>Student Details</span>
             {hasSession && (
               <div style={{
-                display: 'flex', alignItems: 'center', gap: '0.6rem',
-                border: '1px solid var(--border)', borderRadius: '0.5rem',
-                padding: '0.3rem 0.6rem', background: 'rgba(255,255,255,0.02)'
+                display: 'flex', alignItems: 'center', gap: '0.4rem',
               }}>
                 <span title="Session active" style={{
                   display: 'inline-block', width: '6px', height: '6px',
