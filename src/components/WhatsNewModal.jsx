@@ -29,35 +29,33 @@ export default function WhatsNewModal() {
             position: 'relative',
             animation: 'fadeIn 0.3s ease-out'
         }}>
-            <button 
-                onClick={handleClose}
-                style={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    background: 'none',
-                    border: 'none',
-                    color: 'var(--text-muted)',
-                    fontSize: '1.2rem',
-                    cursor: 'pointer',
-                    padding: '0.2rem',
-                    lineHeight: 1
-                }}
-                title="Close"
-            >
-                ✕
-            </button>
-
-            <h3 style={{ 
-                color: '#818CF8', 
-                margin: '0 0 1rem 0',
-                fontSize: '1.1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem'
-            }}>
-                ✨ What's New in v2.0
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ 
+                    color: '#818CF8', 
+                    margin: 0,
+                    fontSize: '1.1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                }}>
+                    ✨ What's New in v2.0
+                </h3>
+                <button 
+                    onClick={handleClose}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        color: 'var(--text-muted)',
+                        fontSize: '1.2rem',
+                        cursor: 'pointer',
+                        padding: '0.2rem',
+                        lineHeight: 1
+                    }}
+                    title="Close"
+                >
+                    ✕
+                </button>
+            </div>
 
             <ul style={{
                 margin: '0',

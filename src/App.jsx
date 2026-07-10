@@ -304,10 +304,10 @@ function App() {
             <span>Student Details</span>
             {hasSession && (
               <div style={{
-                display: 'flex', alignItems: 'center', gap: '0.4rem',
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
               }}>
                 <span title="Session active" style={{
-                  display: 'inline-block', width: '6px', height: '6px',
+                  display: 'inline-block', width: '8px', height: '8px',
                   borderRadius: '50%', background: 'var(--secondary)',
                   boxShadow: '0 0 6px var(--secondary)',
                   animation: 'pulse 2s infinite', flexShrink: 0,
@@ -319,8 +319,9 @@ function App() {
                   style={{
                     background: 'none', border: 'none', padding: '0',
                     cursor: 'pointer', color: 'var(--text-muted)',
-                    opacity: 0.7, transition: 'opacity 0.2s, color 0.2s',
+                    opacity: 0.7, transition: 'opacity 0.2s, color 0.2s, transform 0.2s',
                     display: 'flex', alignItems: 'center',
+                    transform: 'translateY(-1px)'
                   }}
                   onMouseEnter={e => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.color = 'var(--danger)'; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity = '0.7'; e.currentTarget.style.color = 'var(--text-muted)'; }}
