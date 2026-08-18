@@ -22,3 +22,29 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables (NEVER commit secrets!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+
+# Backup / scratch files
+App_previous.jsx
+
+# Screenshots (large binary files, not needed in repo)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+Screenshot*.png
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# OS files
+Thumbs.db

@@ -12,6 +12,105 @@ import WhatsNewModal from './components/WhatsNewModal';
 import { useConfig } from './hooks/useConfig';
 import { useSession } from './hooks/useSession';
 
+const BOOKMARKLET = `javascript:(function(){var a=document.querySelector('[name=CourseBranchDurationId]'),b=document.querySelector('[name=StudentAdmissionId]'),c=document.querySelector('[name=BranchId]');var v1=a&&a.selectedOptions&&a.selectedOptions[0]?a.selectedOptions[0].value:null,v2=b?b.value:null,v3=c?c.value:null;if(!v1||!v2||!v3){alert('Please fill out all the values on the attendance page and then try again.');}else{alert('Skippie Config\nCourseBranchDurationId: '+v1+'\nStudentAdmissionId: '+v2+'\nBranchId: '+v3);}})();`;
+
+function DurationIdHelper() {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(BOOKMARKLET).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+  return (
+    <details style={{ marginTop: '0.6rem' }}>
+      <summary style={{
+        cursor: 'pointer', fontSize: '0.78rem', color: '#818CF8',
+        fontWeight: 600, letterSpacing: '0.02em', userSelect: 'none',
+        display: 'flex', alignItems: 'center', gap: '0.3rem',
+        listStyle: 'none', outline: 'none',
+      }}>
+        <span>🔍</span> How to find your Duration ID?
+      </summary>
+      <div style={{
+        marginTop: '0.5rem',
+        background: 'rgba(79, 70, 229, 0.08)',
+        border: '1px solid rgba(129, 140, 248, 0.25)',
+        borderRadius: '0.5rem',
+        padding: '0.6rem 0.75rem',
+        fontSize: '0.8rem',
+        color: 'var(--text-main)',
+        lineHeight: '1.6',
+      }}>
+        <p style={{ margin: '0 0 0.5rem', fontWeight: 700, color: '#818CF8' }}>
+          ⚡ Auto-Extractor Guide
+        </p>
+        <ol style={{ margin: 0, paddingLeft: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+          <li>Go to your official <a href="https://ums.uktech.ac.in" target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>UKTECH student dashboard</a>.</li>
+          <li>Navigate to the <strong>Student Attendance System</strong> page.</li>
+          <li>Select your <strong>Semester / Year / Session</strong> dropdowns on that page.</li>
+          <li>Copy the special code below.</li>
+          <li>
+            Paste it into your browser's <strong>URL address bar</strong> on the UKTECH page and hit{' '}
+            <kbd style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '3px', padding: '1px 5px', fontFamily: 'monospace', fontSize: '0.75rem' }}>Enter</kbd>.
+            <br />
+            <span style={{ color: '#F59E0B', fontSize: '0.75rem' }}>
+              ⚠️ <strong>Note:</strong> You <em>MUST</em> remove the quotation marks at the start and end of the pasted text!
+            </span>
+          </li>
+          <li>A popup will flash with your exact IDs!</li>
+        </ol>
+
+        {/* Code block — copy button is BELOW, not on top */}
+        <div style={{ marginTop: '0.7rem' }}>
+          <pre style={{
+            margin: 0,
+            padding: '0.55rem 0.7rem',
+            background: 'rgba(0,0,0,0.4)',
+            border: '1px solid rgba(129,140,248,0.2)',
+            borderRadius: '0.4rem 0.4rem 0 0',
+            fontSize: '0.63rem',
+            fontFamily: 'monospace',
+            color: '#a5b4fc',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-all',
+            lineHeight: '1.5',
+            maxHeight: '68px',
+            overflowY: 'auto',
+          }}>
+            {BOOKMARKLET}
+          </pre>
+          <button
+            type="button" onClick={copy}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '0.3rem 0',
+              background: copied ? 'rgba(16,185,129,0.18)' : 'rgba(79,70,229,0.2)',
+              border: `1px solid ${copied ? 'rgba(52,211,153,0.4)' : 'rgba(129,140,248,0.3)'}`,
+              borderTop: 'none',
+              borderRadius: '0 0 0.4rem 0.4rem',
+              color: copied ? '#34D399' : '#818CF8',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              letterSpacing: '0.03em',
+            }}
+          >
+            {copied ? '✓ Copied to clipboard!' : '📋 Copy Code'}
+          </button>
+        </div>
+
+        <p style={{ margin: '0.6rem 0 0', padding: '0.45rem 0.6rem', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(52,211,153,0.2)', borderRadius: '0.4rem', color: '#34D399', fontSize: '0.75rem' }}>
+          ✅ The popup will show your <strong>CourseBranchDurationId</strong>, <strong>StudentAdmissionId</strong> &amp; <strong>BranchId</strong> — paste them into Skippie!
+        </p>
+      </div>
+    </details>
+  );
+}
+
+
 function App() {
   const { config, updateConfig } = useConfig();
   const { session, setSession, hasSession } = useSession();
@@ -366,6 +465,7 @@ function App() {
                 <input type="number" step="0.5" name="ClassesPerDay" value={formData.ClassesPerDay} onChange={handleChange} placeholder="For accurate predictions" />
               </div>
             </div>
+            <DurationIdHelper />
             <button type="submit" disabled={loading}>
               {loading ? <div className="loader"></div> : (hasSession ? 'Fetch & Analyze' : '🔐 Login & Fetch')}
             </button>
